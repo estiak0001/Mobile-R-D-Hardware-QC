@@ -2,8 +2,16 @@
 @{
     ViewData["Title"] = "Create Category";
 }
+<style>
+    .select2-results {
+        color: black;
+    }
 
-<h1> Create Category </h1>
+    #select2-ddlCategory-container {
+        color: black;
+    }
+</style>
+<h1> Create Sub Category </h1>
 <div class="row">
     <div class="col-md-12">
         <div class="form-group">
@@ -13,24 +21,40 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="CreateCategory">
+        <form asp-action="CreateSubCategory">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
-                <div class="col-md-4">
-                    <label>Model</label>
-                    <select asp-for="CategoryID" id="ddlModel" class="form-control">
-                        <option value="@Model.CategoryID">--Select Model--</option>
-                        @if (Model.MRNDQC_CategoryVM.Count() > 0)
+                
+                @if (@Model.IsUpdate == "Update")
                         {
-                            foreach (var item in Model.MRNDQC_CategoryVM)
-                            {
-                                <option value="@item.Id">@item.CategoryName</option>
-                            }
+                <div class="col-md-3">
+                    <label>Category</label>
+                    <select disabled asp-for="CategoryID" id="ddlCategory" class="form-control">
+                        <option value="@Model.CategoryID">--Select Category--</option>
+                        @foreach (var item in Model.MRNDQC_CategoryVM)
+                        {
+                            <option value="@item.Id">@item.CategoryName</option>
+                        }
+                    </select>
+                    <span class="text-danger" asp-validation-for="CategoryID"></span>
+                    <input type="hidden" asp-for="CategoryID" value="@Model.CategoryID" />
+                </div>
+                        }
+                        else
+                        {
+                           <div class="col-md-4">
+                    <label>Model</label>
+                    <select asp-for="CategoryID" id="ddlCategory" class="form-control">
+                        <option value="@Model.CategoryID">--Select Category--</option>
+                        @foreach (var item in Model.MRNDQC_CategoryVM)
+                        {
+                        <option value="@item.Id">@item.CategoryName</option>
                         }
 
                     </select>
-                    <span id="ddlmodelError" class="error">Please select model!</span>
+                    <span class="text-danger" asp-validation-for="CategoryID"></span>
                 </div>
+                        }
                 <div class="col-md-2">
                     <label>Fault Type</label>
                     <select asp-for="FaultType" id="ddlFaultType" class="form-control">
@@ -38,13 +62,13 @@
                         <option value="F">Functional</option>
                         <option value="A">Aesthetic</option>
                     </select>
-                    <span class="error">Please select Fault Type!</span>
+                    <span class="text-danger" asp-validation-for="FaultType"></span>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label class="control-label">Sub Category Name</label>
                         <input id="txtSubCategoryName" asp-for="SubCategoryName" class="form-control" placeholder="Enter Sub Category Name" />
-                        <span class="error">Please Enter Sub Category Name!</span>
+                        <span class="text-danger" asp-validation-for="SubCategoryName"></span>
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -66,8 +90,7 @@
 
 
 <div style="">
-    <button type="button" id="submit" class="btn btn-success">Submit</button>
-    <a style="float:right" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a>
+    <a style="" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a>
 </div>
 
 
@@ -77,7 +100,7 @@
     <script>
         $(document).ready(function () {
             $(".alert").fadeIn(100).delay(2500).fadeOut(1400);
-
+            $('#ddlCategory').select2({});
             @*var SubCategoryItem = [];
 
             var LoadDataForEidit = @Json.Serialize(Model.MRNDQC_SubCategoryVM);

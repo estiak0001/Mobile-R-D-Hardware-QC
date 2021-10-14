@@ -25,6 +25,7 @@
                         <table id="datatable-responsive" class="table table-sm  dt-responsive nowrap" cellspacing="0" width="100%">
                             <thead style="background-color: #d7e3ef;">
                                 <tr>
+                                    <th>Category Name</th>
                                     <th>Sub Category Name</th>
                                     <th>Fault Type</th>
                                     <th style="text-align:center">Action's</th>
@@ -34,6 +35,9 @@
                                 @foreach (var item in Model)
                                 {
                                 <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CategoryName)
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.SubCategoryName)
                                     </td>

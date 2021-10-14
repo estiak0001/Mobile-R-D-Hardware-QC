@@ -23,11 +23,10 @@ namespace WebAppEs.Entity
         [Required]
         [StringLength(50)]
         public string LineNo { get; set; }
+
         [Required]
         [StringLength(50)]
-        [ForeignKey("MobileRNDPartsModels")]
         public Guid PartsModelID { get; set; }
-        public virtual MobileRNDPartsModels MobileRNDPartsModels { get; set; }
 
         [Required]
         [StringLength(50)]

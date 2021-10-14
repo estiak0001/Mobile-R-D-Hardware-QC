@@ -90,6 +90,7 @@ namespace WebAppEs.Services
                              Id = cat.Id,
                              SubCategoryName = cat.SubCategoryName,
                              FaultType = cat.FaultType,
+                             CategoryID = cat.CategoryID,
                          }).ToList();
             return items;
         }
@@ -97,12 +98,16 @@ namespace WebAppEs.Services
         public List<MRNDQC_SubCategoryVM> GetSubCatList()
         {
             var items = (from cat in _context.MRNDQC_SubCategory
-
+                         join mc in _context.MRNDQC_Category
+                                on new { X1 = cat.CategoryID } equals new { X1 = mc.Id }
+                                into rmp
+                         from cm in rmp.DefaultIfEmpty()
                          select new MRNDQC_SubCategoryVM()
                          {
                              Id = cat.Id,
                              SubCategoryName = cat.SubCategoryName,
                              FaultType = cat.FaultType,
+                             CategoryName = cm.CategoryName,
                          }).ToList();
             return items;
         }
@@ -127,6 +132,8 @@ namespace WebAppEs.Services
                              Id = cat.Id,
                              SubCategoryName = cat.SubCategoryName,
                              FaultType = cat.FaultType,
+                             CategoryID = cat.CategoryID,
+                             IsUpdate = "Update"
                          }).FirstOrDefault();
             return items;
         }
@@ -148,23 +155,45 @@ namespace WebAppEs.Services
 
         public bool AddSubCategory(MRNDQC_SubCategoryVM viewModel)
         {
+            var UpdateDataSet = _context.MRNDQC_SubCategory.Where(x => x.Id == viewModel.Id).FirstOrDefault();
+            var IsExist = _context.MRNDQC_SubCategory.Where(x => x.SubCategoryName == viewModel.SubCategoryName && x.CategoryID == viewModel.CategoryID).FirstOrDefault();
             if (viewModel == null)
             {
                 return false;
             }
             else
             {
-                _context.MRNDQC_SubCategory.Add(new MRNDQC_SubCategory()
+                if (UpdateDataSet == null)
                 {
-                    CategoryID = viewModel.CategoryID,
-                    SubCategoryName = viewModel.SubCategoryName,
-                    FaultType = viewModel.FaultType,
-                    LUser = viewModel.LUser
-                });
-            }
-            var result = _context.SaveChanges();
+                    if (IsExist == null)
+                    {
+                        _context.MRNDQC_SubCategory.Add(new MRNDQC_SubCategory()
+                        {
+                            CategoryID = (Guid)viewModel.CategoryID,
+                            SubCategoryName = viewModel.SubCategoryName,
+                            FaultType = viewModel.FaultType,
+                            LUser = viewModel.LUser
+                        });
+                        var result = _context.SaveChanges();
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    UpdateDataSet.SubCategoryName = viewModel.SubCategoryName;
+                    UpdateDataSet.FaultType = viewModel.FaultType;
+                    UpdateDataSet.LUser = viewModel.LUser;
+                    UpdateDataSet.UpdatedOn = DateTime.Now;
+                    _context.MRNDQC_SubCategory.Update(UpdateDataSet);
 
-            return true;
+                    var result = _context.SaveChanges();
+                    return true;
+                }
+            }
         }
     }
 }

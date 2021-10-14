@@ -10,8 +10,8 @@ using WebAppEs.Data;
 namespace WebAppEs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211013115051_updateFaultEntryAndDetailsTable3")]
-    partial class updateFaultEntryAndDetailsTable3
+    [Migration("20211014104829_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -278,7 +278,8 @@ namespace WebAppEs.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CategoryID")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasMaxLength(150);
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -304,14 +305,13 @@ namespace WebAppEs.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SubCategoryID")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasMaxLength(150);
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryID");
 
                     b.HasIndex("FaultEntryID");
 
@@ -376,8 +376,6 @@ namespace WebAppEs.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PartsModelID");
 
                     b.ToTable("MobileRNDFaultsEntry");
                 });
@@ -558,24 +556,9 @@ namespace WebAppEs.Migrations
 
             modelBuilder.Entity("WebAppEs.Entity.MobileRNDFaultDetails", b =>
                 {
-                    b.HasOne("WebAppEs.Entity.MRNDQC_Category", "MRNDQC_Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebAppEs.Entity.MobileRNDFaultsEntry", "MobileRNDFaultsEntry")
                         .WithMany()
                         .HasForeignKey("FaultEntryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MobileRNDFaultsEntry", b =>
-                {
-                    b.HasOne("WebAppEs.Entity.MobileRNDPartsModels", "MobileRNDPartsModels")
-                        .WithMany()
-                        .HasForeignKey("PartsModelID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

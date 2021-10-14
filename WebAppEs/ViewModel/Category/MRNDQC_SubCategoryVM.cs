@@ -9,14 +9,19 @@ namespace WebAppEs.ViewModel.Category
     public class MRNDQC_SubCategoryVM
     {
         public Guid Id { get; set; }
+        public string CategoryName { get; set; }
 
         [Required]
+        [Display(Name = "Sub Category")]
         public string SubCategoryName { get; set; }
 
         [Required]
+        [Display(Name = "Fault Type")]
         public string FaultType { get; set; }
 
-        public Guid CategoryID { get; set; }
+        [Required]
+        [Display(Name = "Category")]
+        public Guid? CategoryID { get; set; }
 
         public Guid LUser { get; set; }
 

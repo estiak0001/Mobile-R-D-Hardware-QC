@@ -132,25 +132,24 @@ namespace WebAppEs.Controllers
 			status.success = false;
 			var employeeID = HttpContext.Session.GetString("EmployeeID");
 			model.LUser = newGuid;
-			if (ModelState.IsValid)
-			{
-				var details = _setupService.GetSubCatByCatID(model.Id);
-				if (details != null)
-				{
-					var isDelete = _setupService.RemoveDetails(details);
-				}
 
-				foreach (var it in model.MRNDQC_SubCategoryVM)
-				{
+
+			//var details = _setupService.GetSubCatByCatID(model.Id);
+			//if (details != null)
+			//{
+			//	var isDelete = _setupService.RemoveDetails(details);
+			//}
+
+			foreach (var it in model.MRNDQC_SubCategoryVM)
+			{
+				if(it.CategoryID == null)
+                {
 					it.CategoryID = model.Id;
 					it.LUser = model.LUser;
 					DetailsSubmit = _setupService.AddSubCategory(it);
 				}
 			}
-			else
-			{
-				status.success = false;
-			}
+			
 
 			if (DetailsSubmit)
 			{

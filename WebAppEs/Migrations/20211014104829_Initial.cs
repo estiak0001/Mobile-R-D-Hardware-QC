@@ -76,6 +76,29 @@ namespace WebAppEs.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MobileRNDFaultsEntry",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    EmployeeID = table.Column<string>(maxLength: 50, nullable: false),
+                    Date = table.Column<DateTime>(maxLength: 50, nullable: false),
+                    LineNo = table.Column<string>(maxLength: 50, nullable: false),
+                    PartsModelID = table.Column<Guid>(maxLength: 50, nullable: false),
+                    LotNo = table.Column<string>(maxLength: 50, nullable: false),
+                    Shipment = table.Column<string>(maxLength: 50, nullable: false),
+                    TotaCheckedQty = table.Column<int>(maxLength: 50, nullable: false),
+                    TypeOfProduction = table.Column<string>(maxLength: 150, nullable: false),
+                    QCPass = table.Column<int>(maxLength: 50, nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    UpdatedOn = table.Column<DateTime>(nullable: true),
+                    LUser = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MobileRNDFaultsEntry", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MobileRNDPartsModels",
                 columns: table => new
                 {
@@ -101,22 +124,6 @@ namespace WebAppEs.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MRNDQC_Category", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MRNDQC_SubCategory",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    SubCategoryName = table.Column<string>(maxLength: 150, nullable: false),
-                    FaultType = table.Column<string>(maxLength: 150, nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    UpdatedOn = table.Column<DateTime>(nullable: true),
-                    LUser = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MRNDQC_SubCategory", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,54 +251,19 @@ namespace WebAppEs.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MobileRNDFaultsEntry",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    EmployeeID = table.Column<string>(maxLength: 50, nullable: false),
-                    UserID = table.Column<Guid>(nullable: false),
-                    Date = table.Column<DateTime>(maxLength: 50, nullable: false),
-                    LineNo = table.Column<string>(maxLength: 50, nullable: false),
-                    PartsModelID = table.Column<Guid>(maxLength: 50, nullable: false),
-                    LotNo = table.Column<string>(maxLength: 50, nullable: false),
-                    FuncMaterialFault = table.Column<int>(maxLength: 50, nullable: false),
-                    FuncProductionFault = table.Column<int>(maxLength: 50, nullable: false),
-                    FuncSoftwareFault = table.Column<int>(maxLength: 50, nullable: false),
-                    AesthMaterialFault = table.Column<int>(maxLength: 50, nullable: false),
-                    AesthProductionFault = table.Column<int>(maxLength: 50, nullable: false),
-                    TotalFunctionalFault = table.Column<int>(maxLength: 50, nullable: false),
-                    TotalAestheticFault = table.Column<int>(maxLength: 50, nullable: false),
-                    TotaCheckedQty = table.Column<int>(maxLength: 50, nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    UpdatedOn = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MobileRNDFaultsEntry", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MobileRNDFaultsEntry_MobileRNDPartsModels_PartsModelID",
-                        column: x => x.PartsModelID,
-                        principalTable: "MobileRNDPartsModels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MobileRNDFaultDetails",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     EmployeeID = table.Column<string>(maxLength: 50, nullable: false),
                     FaultEntryID = table.Column<Guid>(nullable: false),
-                    ApplicationUserID = table.Column<Guid>(nullable: false),
                     Date = table.Column<DateTime>(maxLength: 50, nullable: false),
-                    FaultType = table.Column<string>(maxLength: 250, nullable: false),
+                    CategoryID = table.Column<Guid>(maxLength: 150, nullable: false),
+                    SubCategoryID = table.Column<Guid>(maxLength: 150, nullable: false),
                     FaultQty = table.Column<int>(maxLength: 50, nullable: false),
-                    RootCause = table.Column<string>(nullable: true),
-                    Solution = table.Column<string>(nullable: true),
-                    Remarks = table.Column<string>(nullable: true),
                     CreatedOn = table.Column<DateTime>(nullable: false),
-                    UpdatedOn = table.Column<DateTime>(nullable: true)
+                    UpdatedOn = table.Column<DateTime>(nullable: true),
+                    LUser = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,6 +272,29 @@ namespace WebAppEs.Migrations
                         name: "FK_MobileRNDFaultDetails_MobileRNDFaultsEntry_FaultEntryID",
                         column: x => x.FaultEntryID,
                         principalTable: "MobileRNDFaultsEntry",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MRNDQC_SubCategory",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    SubCategoryName = table.Column<string>(maxLength: 150, nullable: false),
+                    FaultType = table.Column<string>(maxLength: 150, nullable: false),
+                    CategoryID = table.Column<Guid>(nullable: false),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    UpdatedOn = table.Column<DateTime>(nullable: true),
+                    LUser = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MRNDQC_SubCategory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MRNDQC_SubCategory_MRNDQC_Category_CategoryID",
+                        column: x => x.CategoryID,
+                        principalTable: "MRNDQC_Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -359,9 +354,9 @@ namespace WebAppEs.Migrations
                 column: "FaultEntryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MobileRNDFaultsEntry_PartsModelID",
-                table: "MobileRNDFaultsEntry",
-                column: "PartsModelID");
+                name: "IX_MRNDQC_SubCategory_CategoryID",
+                table: "MRNDQC_SubCategory",
+                column: "CategoryID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -388,7 +383,7 @@ namespace WebAppEs.Migrations
                 name: "MobileRNDFaultDetails");
 
             migrationBuilder.DropTable(
-                name: "MRNDQC_Category");
+                name: "MobileRNDPartsModels");
 
             migrationBuilder.DropTable(
                 name: "MRNDQC_SubCategory");
@@ -406,7 +401,7 @@ namespace WebAppEs.Migrations
                 name: "MobileRNDFaultsEntry");
 
             migrationBuilder.DropTable(
-                name: "MobileRNDPartsModels");
+                name: "MRNDQC_Category");
         }
     }
 }

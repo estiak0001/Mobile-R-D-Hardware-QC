@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WebAppEs.Enums;
+using WebAppEs.Handlers;
 using WebAppEs.Models;
 using WebAppEs.Services;
 using WebAppEs.ViewModel.Category;
@@ -61,36 +63,42 @@ namespace WebAppEs.Controllers
 			viewModel.MRNDQC_CategoryVM = CategoryList;
 			return View(viewModel);
 		}
-		//fgc
+		
 		[HttpPost]
 		public IActionResult CreateSubCategory(MRNDQC_SubCategoryVM model)
 		{
 			ClaimsPrincipal currentUser = this.User;
 			var ID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-			Guid newGuid = Guid.Parse(ID);
+			
 			bool isSuperAdmin = currentUser.IsInRole("SuperAdmin");
 			bool isAdmin = currentUser.IsInRole("Admin");
 			var DetailsSubmit = false;
-			//bool status = false;
+
 			StatusModel status = new StatusModel();
 			status.success = false;
 			var employeeID = HttpContext.Session.GetString("EmployeeID");
+			var UserID = HttpContext.Session.GetString("Id");
+			Guid newGuid = Guid.Parse(UserID);
 			model.LUser = newGuid;
 			if (ModelState.IsValid)
 			{
 				DetailsSubmit = _setupService.AddSubCategory(model);
+				if(DetailsSubmit)
+                {
+					return RedirectToAction("Index", "SubCategory");
+				}
+                else
+                {
+					ViewBag.Alert = CommonServices.ShowAlert(Alerts.Danger, "This Sub Category Already Exist");
+				}
 			}
 			else
 			{
-				status.success = false;
+				ViewBag.Alert = CommonServices.ShowAlert(Alerts.Danger, "Unknown error");
 			}
-
-			if (DetailsSubmit)
-			{
-				status.success = true;
-			}
-
-			return View();
+			var CategoryList = _setupService.GetAllCategoryList();
+			model.MRNDQC_CategoryVM = CategoryList;
+			return View(model);
 		}
 	}
 }

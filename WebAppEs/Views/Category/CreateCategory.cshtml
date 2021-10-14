@@ -75,11 +75,11 @@
         <div style="margin-top:10px" id="SubCategoryItem" class="tablecontainer col-md-8">
         </div>
     </div>
+    <div style="">
+        <button type="button" id="submit" class="btn btn-success">Submit</button>
+    </div>
 }
-
-
 <div style="">
-    <button type="button" id="submit" class="btn btn-success">Submit</button>
     <a style="float:right" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a>
 </div>
 
@@ -100,8 +100,10 @@
                 if (LoadDataForEidit.length != 0) {
                     for (var h = 0; h < LoadDataForEidit.length; h++) {
                         SubCategoryItem.push({
+                            CategoryID: LoadDataForEidit[h].categoryID,
                             SubCategoryName: LoadDataForEidit[h].subCategoryName,
-                            FaultType: LoadDataForEidit[h].faultType
+                            FaultType: LoadDataForEidit[h].faultType,
+                            IsRemove: "No",
                         });
                     }
                     GeneratedItemsTable();
@@ -128,8 +130,10 @@
                 }
                 if (isValidItem) {
                     SubCategoryItem.push({
+                        CategoryID: null,
                         SubCategoryName: $('#txtSubCategoryName').val().trim(),
-                        FaultType: $('#ddlFaultType').val().trim()
+                        FaultType: $('#ddlFaultType').val().trim(),
+                        IsRemove: "Yes"
                     });
                     $('#ddlFaultType').val('').focus();
                     $('#txtSubCategoryName').val('');
@@ -300,13 +304,16 @@
                         var $row = $('<tr/>');
                         $row.append($('<td/>').html(val.SubCategoryName));
                         $row.append($('<td/>').html(val.FaultType));
-                        var $remove = $('<a href="#"><i style="font-size: 17px; color:red;" class="fa fa-trash"></i></a>');
-                        $remove.click(function (e) {
-                            e.preventDefault();
-                            SubCategoryItem.splice(i, 1);
-                            GeneratedItemsTable();
-                        });
-                        $row.append($('<td/>').html($remove));
+                        if (val.IsRemove == "Yes") {
+                            var $remove = $('<a href="#"><i style="font-size: 17px; color:red;" class="fa fa-trash"></i></a>');
+                            $remove.click(function (e) {
+                                e.preventDefault();
+                                SubCategoryItem.splice(i, 1);
+                                GeneratedItemsTable();
+                            });
+                            $row.append($('<td/>').html($remove));
+                        }
+                        
                         $tbody.append($row);
                     });
                     console.log("current", SubCategoryItem);
