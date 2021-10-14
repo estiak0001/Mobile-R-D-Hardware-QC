@@ -1,0 +1,323 @@
+﻿@model WebAppEs.ViewModel.Category.MRNDQC_SubCategoryVM
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<h1> Create Category </h1>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group">
+            @Html.Raw(@ViewBag.Alert)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="CreateCategory">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label>Model</label>
+                    <select asp-for="CategoryID" id="ddlModel" class="form-control">
+                        <option value="@Model.CategoryID">--Select Model--</option>
+                        @if (Model.MRNDQC_CategoryVM.Count() > 0)
+                        {
+                            foreach (var item in Model.MRNDQC_CategoryVM)
+                            {
+                                <option value="@item.Id">@item.CategoryName</option>
+                            }
+                        }
+
+                    </select>
+                    <span id="ddlmodelError" class="error">Please select model!</span>
+                </div>
+                <div class="col-md-2">
+                    <label>Fault Type</label>
+                    <select asp-for="FaultType" id="ddlFaultType" class="form-control">
+                        <option value="@Model.FaultType">--Select Fault Type--</option>
+                        <option value="F">Functional</option>
+                        <option value="A">Aesthetic</option>
+                    </select>
+                    <span class="error">Please select Fault Type!</span>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Sub Category Name</label>
+                        <input id="txtSubCategoryName" asp-for="SubCategoryName" class="form-control" placeholder="Enter Sub Category Name" />
+                        <span class="error">Please Enter Sub Category Name!</span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div style="padding-top: 25px;" class="form-group">
+                        @if (@Model.IsUpdate == "Update")
+                        {
+                            <input type="submit" value="Update" class="btn btn-primary" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div style="">
+    <button type="button" id="submit" class="btn btn-success">Submit</button>
+    <a style="float:right" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a>
+</div>
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            $(".alert").fadeIn(100).delay(2500).fadeOut(1400);
+
+            @*var SubCategoryItem = [];
+
+            var LoadDataForEidit = @Json.Serialize(Model.MRNDQC_SubCategoryVM);
+            console.log(LoadDataForEidit);
+
+            if (LoadDataForEidit != null) {
+                if (LoadDataForEidit.length != 0) {
+                    for (var h = 0; h < LoadDataForEidit.length; h++) {
+                        SubCategoryItem.push({
+                            SubCategoryName: LoadDataForEidit[h].subCategoryName,
+                            FaultType: LoadDataForEidit[h].faultType
+                        });
+                    }
+                    GeneratedItemsTable();
+                }
+            }
+
+            //Add button click function
+            $('#add').click(function () {
+                var isValidItem = true;
+                if ($('#ddlFaultType').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlFaultType').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#ddlFaultType').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                if ($('#txtSubCategoryName').val().trim() == '') {
+                    isValidItem = false;
+                    $('#txtSubCategoryName').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#txtSubCategoryName').siblings('span.error').css('visibility', 'hidden');
+                }
+                if (isValidItem) {
+                    SubCategoryItem.push({
+                        SubCategoryName: $('#ddlFaultType').val().trim(),
+                        FaultType: $('#txtSubCategoryName').val().trim()
+                    });
+                    $('#ddlFaultType').val('').focus();
+                    $('#txtSubCategoryName').val('');
+                }
+                GeneratedItemsTable();
+            });
+
+            //Save button click function
+            $('#submit').click(function () {
+                //validation of order
+                var isAllValid = true;
+                if (SubCategoryItem.length == 0) {
+                    $('#SubCategoryItem').html('<span style="color:red;">Please add Sub Category First!</span>');
+                    isAllValid = false;
+                }
+                //Save if valid
+                if (isAllValid) {
+                    var data = {
+                        Id: $('#txtHiddenCategoryID').val().trim(),
+                        MRNDQC_SubCategoryVM: SubCategoryItem
+                    }
+
+                    $(this).val('Please wait...');
+
+                    $.ajax({
+                        url: '@Url.Action("SubCategoryAdd", "Category")',
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        success: function (d) {
+                            alert('Successfully done.');
+                            window.location.href = '@Url.Action("Index", "Category")';
+                        },
+                        error: function () {
+                            alert('Error. Please try again.');
+                        }
+                    });
+                }
+            });*@
+
+            @*$('#ddlLot').on('change', function () {
+                //alert($('#ddlLine').val().trim());
+
+                if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '') {
+                    alert("Please Select Line and Model First");
+                    $('#ddlLot').val("");
+                }
+                else {
+                    DropDownChangeData();
+                }
+            });
+            $('#ddlModel').on('change', function () {
+                if ($('#ddlLine').val().trim() == '') {
+                    alert("Please Select Line First!");
+                    $('#ddlModel').val("");
+                }
+                else if ($('#ddlLine').val().trim() != '' && $('#ddlLot').val().trim() == '')
+                {
+
+                }
+                else {
+                    DropDownChangeData();
+                }
+            });
+            $('#ddlLine').on('change', function () {
+                //alert($('#ddlLine').val().trim());
+
+                if ($('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
+                    //alert("Please Select Line and Model First");
+                    //$('#ddlLot').val("");
+                    ////alert($('#txtDate').val().trim());
+                }
+                else {
+                    DropDownChangeData();
+                }
+            });
+
+            $('#txtDate').on('change', function () {
+                if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
+                }
+                else {
+                    DropDownChangeData();
+                }
+            });*@
+
+            @*function DropDownChangeData() {
+                var data = {
+                        Date: $('#txtDate').val().trim(),
+                        LineNo: $('#ddlLine').val().trim(),
+                        PartsModelID: $('#ddlModel').val().trim(),
+                        LotNo: $('#ddlLot').val().trim(),
+                    }
+                    $.ajax({
+                        data: data,
+                        url: '@Url.Action("LoadFullSetData", "AddFaultsInfo")',
+                        type: 'GET',
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        success: function (result) {
+                            if (result != null) {
+                                SubCategoryItem = [];
+                                //hidden Id for Update
+                                $('#txtHiddenID').val(result.id);
+
+                                $('#txtTotalCheckQty').val(result.totalCheckedQty)
+                                //Functional Data
+                                $('#txtTotalFunctional').text(result.totalFunctionalFault);
+                                $('#txtMaterialFaultFun').val(result.funcMaterialFault);
+                                $('#txtProductionFaultFun').val(result.funcProductionFault);
+                                $('#txtSoftwareFaultFun').val(result.funcSoftwareFault);
+
+                                //Aesthetic Data
+                                $('#textTotalAesthetic').text(result.totalAestheticFault);
+                                $('#txtMaterialFaultAes').val(result.aesthMaterialFault);
+                                $('#txtProductionFaultAes').val(result.aesthProductionFault);
+
+                                //button text
+                                $('#btnSubmit').text('Update');
+
+                                console.log(result);
+
+                                for (var h = 0; h < result.mobileRNDFaultDetailsViewModel.length; h++) {
+                                    SubCategoryItem.push({
+                                        FaultType: result.mobileRNDFaultDetailsViewModel[h].faultType,
+                                        FaultQty: result.mobileRNDFaultDetailsViewModel[h].faultQty,
+                                        RootCause: result.mobileRNDFaultDetailsViewModel[h].rootCause,
+                                        Solution: result.mobileRNDFaultDetailsViewModel[h].solution,
+                                        Remarks: result.mobileRNDFaultDetailsViewModel[h].remarks,
+                                    });
+                                }
+                                if (result.mobileRNDFaultDetailsViewModel.length != 0) {
+                                    GeneratedItemsTable();
+                                    $('#submit').text('Update');
+                                }
+                                console.log(SubCategoryItem);
+                            }
+                            else {
+                                $('#txtHiddenID').val("00000000-0000-0000-0000-000000000000");
+                                $('#txtTotalCheckQty').val("")
+                                $('#txtTotalFunctional').text("0");
+                                $('#txtMaterialFaultFun').val("");
+                                $('#txtProductionFaultFun').val("");
+                                $('#txtSoftwareFaultFun').val("");
+
+                                $('#textTotalAesthetic').text('0');
+                                $('#txtMaterialFaultAes').val("");
+                                $('#txtProductionFaultAes').val("");
+
+                                SubCategoryItem = [];
+                                GeneratedItemsTable();
+
+                                $('#btnSubmit').text('Submit');
+                                $('#submit').text('Submit')
+                            }
+
+                        }
+                    });
+            }*@
+            //function for show added items in table
+
+            //function GeneratedItemsTable() {
+            //    if (SubCategoryItem.length > 0) {
+            //        var $table = $('<table id="datatable-fixed-header" class="table table-sm table-bordered" style="    width: 100%;font-size: larger; text-align: center;"/>');
+            //        $table.append('<thead style = "background-color: #2a3f54; color: white;"><tr><th>Sub Category</th><th>Faults Type</th> <th></th></tr></thead>');
+            //        var $tbody = $('<tbody/>');
+            //        $.each(SubCategoryItem, function (i, val) {
+            //            var $row = $('<tr/>');
+            //            $row.append($('<td/>').html(val.FaultType));
+            //            $row.append($('<td/>').html(val.SubCategoryName));
+            //            var $remove = $('<a href="#"><i style="font-size: 17px; color:red;" class="fa fa-trash"></i></a>');
+            //            $remove.click(function (e) {
+            //                e.preventDefault();
+            //                SubCategoryItem.splice(i, 1);
+            //                GeneratedItemsTable();
+            //            });
+            //            $row.append($('<td/>').html($remove));
+            //            $tbody.append($row);
+            //        });
+            //        console.log("current", SubCategoryItem);
+            //        $table.append($tbody);
+            //        $('#SubCategoryItem').html($table);
+            //    }
+            //    else {
+            //        $('#SubCategoryItem').html('');
+            //    }
+            //}
+        });
+
+        @*function RedirectToPage() {
+            window.location.href = '@Url.Action("Index", "AddFaultsInfo")';
+        }*@
+
+    </script>
+}
+
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+</style>
