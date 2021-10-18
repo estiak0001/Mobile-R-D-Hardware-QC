@@ -32,7 +32,7 @@ namespace WebAppEs.Services
 		List<MobileRNDFaultsEntryViewModel> GetAllFaultsList(string EmployeeID);
 		List<MobileRNDFaultsEntryViewModel> SortableAllFaultsList(DateTime? startDate, DateTime? toDate, string lineNo, Guid ModelID, string lotNo, string EmployeeID);
 		MobileRNDFaultsEntryViewModel GetFaults(Guid Id);
-		MobileRNDFaultsEntryViewModel GetSortedFaults(DateTime? sortdate, string lineNo, Guid ModelID, string lotNo);
+		MobileRNDFaultsEntryViewModel GetSortedFaults(DateTime? sortdate, string lineNo, Guid ModelID, string lotNo, string Shipment, string Shift, string TypeOfProduction);
 		// Add Faults Details
 
 		bool AddFaultsDetails(MobileRNDFaultDetailsViewModel viewModel);

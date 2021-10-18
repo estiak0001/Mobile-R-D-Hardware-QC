@@ -6,7 +6,7 @@
     <div class="col-md-12 col-sm-12 ">
         <a style="float:right" class="btn btn-info" asp-action="CreateFaultsInfo"> <i class="fa fa-plus pr-2"></i> Create New</a>
         @*<a style="float:right" class="btn btn-outline-dark" asp-action="FaultsDetails"> <i class="fa fa-plus pr-2"></i> Add Faults Details</a>*@
-        <div class="x_panel">
+        <div class="x_panel shadow-lg bg-white rounded">
             <div class="x_title">
                 <h2>List of Faults</h2>
                 <ul class="nav navbar-right panel_toolbox">
@@ -31,14 +31,11 @@
                                         <th>Date</th>
                                         <th>Line</th>
                                         <th>Model</th>
-                                        <th style="font-weight: 900; color: darkviolet; ">Total Checked</th>
-                                        <th>Fun. Material</th>
-                                        <th>Fun. Production</th>
-                                        <th>Fun. Software</th>
-                                        <th style="font-weight: 900; color: darkviolet; ">Fun. Total</th>
-                                        <th>Aes. Material</th>
-                                        <th>Aes. Production</th>
-                                        <th style="font-weight: 900; color: darkviolet; ">Aes. Total</th>
+                                        <th>Shipment</th>
+                                        <th>Shift</th>
+                                        <th style="font-weight: 900; color: midnightblue; ">Total Production</th>
+                                        <th>Type of Prod.</th>
+                                        <th>QC Pass</th>
                                         <th style="text-align:center">Action's</th>
                                     </tr>
                                 </thead>
@@ -48,55 +45,41 @@
                                     var tm = "#myModal" + item.Id;
                                     var mid = "myModal" + item.Id;
                                     <tr>
-                                        @*<td>
-                                                @Html.DisplayFor(modelItem => item.EmployeeID)
-                                            </td>*@
                                         @if (item.StatusIsToday == false)
-                            {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Date)
-                                        </td>
- }
-                            else
-                            {
-                                        <td style="font-weight:bold; color: brown">
-                                            @Html.DisplayFor(modelItem => item.Date)
-                                        </td>
-}
-                                        <td>
+                                        {
+                                    <td style="vertical-align: middle;">
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td> }
+                                                    else
+                                                    {
+                                    <td style="font-weight: bold; vertical-align: middle; color: brown">
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>}
+                                        <td style="vertical-align: middle;">
                                             @Html.DisplayFor(modelItem => item.Line)
                                         </td>
-                                        <td>
+                                        <td style="vertical-align: middle;">
                                             @Html.DisplayFor(modelItem => item.ModelNameWithLot)
                                         </td>
-                                        <td style="background-color: #adda9a; text-align: center">
+                                        <td style="vertical-align: middle;">
+                                            @Html.DisplayFor(modelItem => item.Shipment)
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            @Html.DisplayFor(modelItem => item.Shift)
+                                        </td>
+                                        <td style="text-align: start; font-size: medium; color: #5314ed; vertical-align: middle; padding-left: 20px; ">
                                             @Html.DisplayFor(modelItem => item.TotalCheckedQty)
                                         </td>
-                                        <td style="text-align:center">
-                                            @Html.DisplayFor(modelItem => item.FuncMaterialFault)
+                                        <td style="vertical-align: middle;">
+                                            @Html.DisplayFor(modelItem => item.TypeOfProduction)
                                         </td>
-                                        <td style="text-align:center">
-                                            @Html.DisplayFor(modelItem => item.FuncProductionFault)
-                                        </td>
-                                        <td style="text-align:center">
-                                            @Html.DisplayFor(modelItem => item.FuncSoftwareFault)
-                                        </td>
-                                        <td style="background-color: #b8b7ea; text-align: center">
-                                            @Html.DisplayFor(modelItem => item.TotalFunctionalFault)
-                                        </td>
-                                        <td style="text-align:center">
-                                            @Html.DisplayFor(modelItem => item.AesthMaterialFault)
-                                        </td>
-                                        <td style="text-align:center">
-                                            @Html.DisplayFor(modelItem => item.AesthProductionFault)
-                                        </td>
-                                        <td style="background-color: #f1d1c5; text-align: center">
-                                            @Html.DisplayFor(modelItem => item.TotalAestheticFault)
+                                        <td style="vertical-align: middle; font-size: medium; color: #5314ed; "> 
+                                            @Html.DisplayFor(modelItem => item.QCPass)
                                         </td>
                                         <td style="text-align:center">
                                             <div class="btn-group">
                                                 <a style="color: #3247dd; font-size: large; font-weight: bolder; padding: 0px; cursor:pointer" class="btn btn-sm " data-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false">
+                                                   aria-haspopup="true" aria-expanded="false">
                                                     <i class="fa fa-ellipsis-v"></i>
                                                 </a>
                                                 <div class="dropdown-menu">
@@ -141,7 +124,8 @@
 @section scripts{
     <script>
         $('#datatable-responsive').dataTable({
-            "order": [[0, "desc"]]
+            "order": [[0, "desc"]],
+            "pageLength": 50,
         });
     </script>
 }

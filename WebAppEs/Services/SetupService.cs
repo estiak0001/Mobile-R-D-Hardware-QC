@@ -125,16 +125,31 @@ namespace WebAppEs.Services
 
         public MRNDQC_SubCategoryVM GetSubCategory2(Guid Id)
         {
-            var items = (from cat in _context.MRNDQC_SubCategory.Where(x => x.Id == Id)
+            var items = (from subcat in _context.MRNDQC_SubCategory.Where(x => x.Id == Id)
 
                          select new MRNDQC_SubCategoryVM()
                          {
-                             Id = cat.Id,
-                             SubCategoryName = cat.SubCategoryName,
-                             FaultType = cat.FaultType,
-                             CategoryID = cat.CategoryID,
+                             Id = subcat.Id,
+                             SubCategoryName = subcat.SubCategoryName,
+                             FaultType = subcat.FaultType,
+                             CategoryID = subcat.CategoryID,
                              IsUpdate = "Update"
                          }).FirstOrDefault();
+            return items;
+        }
+
+        public List<MRNDQC_SubCategoryVM> GetSubCategory3(Guid Id, string FaultType)
+        {
+            var items = (from subcat in _context.MRNDQC_SubCategory.Where(x => x.CategoryID == Id && x.FaultType == FaultType)
+
+                         select new MRNDQC_SubCategoryVM()
+                         {
+                             Id = subcat.Id,
+                             SubCategoryName = subcat.SubCategoryName,
+                             FaultType = subcat.FaultType,
+                             CategoryID = subcat.CategoryID,
+                             IsUpdate = ""
+                         }).ToList();
             return items;
         }
 

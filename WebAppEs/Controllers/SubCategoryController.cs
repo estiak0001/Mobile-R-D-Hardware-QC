@@ -100,5 +100,15 @@ namespace WebAppEs.Controllers
 			model.MRNDQC_CategoryVM = CategoryList;
 			return View(model);
 		}
+
+		[HttpPost]
+		//[ValidateAntiForgeryToken]
+		//[AllowAnonymous]
+		public JsonResult GetSubCategoryByCategoryID(string CategoryID, string FaultType)
+		{
+			Guid catID = Guid.Parse(CategoryID);
+			var result = _setupService.GetSubCategory3(catID, FaultType);
+			return Json(result);
+		}
 	}
 }

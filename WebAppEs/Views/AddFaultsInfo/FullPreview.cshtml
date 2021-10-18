@@ -1,172 +1,178 @@
 ﻿@model WebAppEs.ViewModel.FaultsEntry.MobileRNDFaultsEntryViewModel
 @{ ViewData["Title"] = "Preview"; }
 
-
-<div class="row">
-    <div class="col-12">
-        <!-- Main content -->
-        <div class="invoice p-3 mb-3">
-            <!-- title row -->
-            <div class="row">
-                <div class="col-12">
-                    <h4 style="color: brown; font-weight: bolder;">
-                        <span style="color: darkgreen; font-weight: bolder;">Date:</span> @Model.DateString
-                        @*<span class="float-right">Line ID: @Model.LineID</span>*@
-                    </h4>
-                </div>
-                <!-- /.col -->
-            </div>
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-7 five-three">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="card card-outline card-primary">
-                                    <div style="padding: 0px; text-align: center; padding-top: 11px;" class="card-header">
-                                        <h6 style="color: blue; font-weight: 700;" class="card-title">Line</h6>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body cbbb">
-                                        <h2 style="text-align: center; color: brown;">@Model.Line</h2>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="card card-outline card-primary">
-                                    <div style="padding: 0px; text-align: center; padding-top: 11px;" class="card-header">
-                                        <h6 style="color: blue; font-weight: 700;"class="card-title">Model</h6>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body cbbb">
-                                        <h2 style="text-align: center; color: brown;">@Model.ModelNameWithLot</h2>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="card card-outline card-primary">
-                                    <div style="padding: 0px; text-align: center; padding-top: 11px;" class="card-header">
-                                        <h6 style="color: blue; font-weight: 700;" class="card-title">Total Checked Qty</h6>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body cbbb">
-                                        <h2 style="text-align: center; color: brown;">@Model.TotalCheckedQty</h2>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div><!-- end inner row -->
+<div>
+    <div class="card-body">
+        <div class="row">
+            <div style=" padding: 8px;" class="col-md-5">
+                <div style="padding: 8px;" class="shadow-lg bg-white rounded">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Date</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.DateString</span>
                         </div>
                     </div>
-                    <div class="col-sm-5 five-two">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="card card-outline card-primary">
-                                    <div style="padding: 0px; text-align: center; padding-top: 11px;" class="card-header">
-                                        <h6 style="color: blue; font-weight: 700;" class="card-title">Functional Fail</h6>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body cbbb">
-                                        <h2 style="text-align: center; color: brown;">@Model.TotalFunctionalFault</h2>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="card card-outline card-primary">
-                                    <div style="padding: 0px; text-align: center; padding-top: 11px;" class="card-header">
-                                        <h6 style="color: blue; font-weight: 700;" class="card-title">Aesthetic Fail</h6>
-                                    </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body cbbb">
-                                        <h2 style="text-align: center; color: brown;">@Model.TotalAestheticFault</h2>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                        </div><!-- end inner row -->
-                    </div>
-                </div>​<!-- end outer row -->
-            </div>
-            <!-- info row -->
-            <div class="row invoice-info">
-                <div class="col-sm-4 invoice-col">
-                    <h2 style="color: #355400; font-weight: bolder;">Functional Fault Qty:</h2>
-                    
-                    <div class="card">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr>
-                                    <th style="width:50%">Material:</th>
-                                    <td style="text-align: end;">@Model.FuncMaterialFault</td>
-                                </tr>
-                                <tr>
-                                    <th>Production Process</th>
-                                    <td style="text-align: end;">@Model.FuncProductionFault</td>
-                                </tr>
-                                <tr>
-                                    <th>Software:</th>
-                                    <td style="text-align: end;">@Model.FuncSoftwareFault</td>
-                                </tr>
-                            </table>
+                    <hr class="solid" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Line</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Line</span>
                         </div>
                     </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-4 invoice-col">
-                    <h2 style="color: #355400; font-weight: bolder;">Aesthetic Fault Qty:</h2>
-                    
-                    <div class="card">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr>
-                                    <th style="width:50%">Material:</th>
-                                    <td style="text-align: end;">@Model.AesthMaterialFault</td>
-                                </tr>
-                                <tr>
-                                    <th>Production Process</th>
-                                    <td style="text-align: end;">@Model.AesthProductionFault</td>
-                                </tr>
-                            </table>
+                    <hr class="solid" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Model</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.ModelName</span>
+                        </div>
+                    </div>
+                    <hr class="solid" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Order</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.LotNo</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
-            <!-- Table row -->
-            <div style="margin-top: 16px;" class="row">
-                <div class="col-12 table-responsive">
-                    <table  class="table table-striped table-bordered">
-                        <thead style=" background-color: #94b6d8; color: black;">
-                            <tr>
-                                <th>Fault Type</th>
-                                <th>Image of Fault</th>
-                                <th>Fault Quantity #</th>
-                                <th>Root Cause</th>
-                                <th>Solution</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var itm in Model.MobileRNDFaultDetailsViewModel)
-                            {
-                                <tr>
-                                    <td>@itm.FaultType</td>
-                                    <td>No Image</td>
-                                    <td>@itm.FaultQty</td>
-                                    <td>@itm.RootCause</td>
-                                    <td>@itm.Solution</td>
-                                    <td>@itm.Remarks</td>
-                                </tr>
-                            }
-
-                        </tbody>
-                    </table>
+            <div style=" padding: 8px;" class="col-md-2 ">
+                <div style="padding: 8px;height:100%; text-align:center" class="shadow-lg bg-white rounded">
+                    <h5 class="card-title text-uppercase text-muted mb-0">Total Production</h5>
+                    <br />
+                    <span style="padding-top:13px; color:darkblue" class="h4 font-weight-bold mb-0">@Model.TotalCheckedQty</span>
                 </div>
-                <!-- /.col -->
+            </div>
+            <div style=" padding: 8px;" class="col-md-5 ">
+                <div style="padding: 8px;" class="shadow-lg bg-white rounded">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Shipment</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Shipment</span>
+                        </div>
+                    </div>
+                    <hr class="solid" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Shift</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Shift</span>
+                        </div>
+                    </div>
+                    <hr class="solid" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Type of Prod.</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.TypeOfProduction</span>
+                        </div>
+                    </div>
+                    <hr class="solid" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="card-title text-uppercase text-muted mb-0">QC PASS</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.QCPass</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- /.invoice -->
-    </div><!-- /.col -->
+    </div>
+    <div  class="bg-white shadow-lg rounded" style="padding: 10px; width: 60%; margin: auto;">
+        <h5>Category And Sub Category wise Data Preview</h5>
+        <table>
+        @*<thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Fault Type</th>
+                <th>Sub Category</th>
+                <th>Fault Quantity</th>
+            </tr>
+        </thead>*@
+        @foreach (var plan in Model.MobileRNDFaultDetailsViewModel.GroupBy(p => new { p.CategoryName }))
+        {
+        <tr class="cat">
+            <th style="" colspan="2">@plan.Key.CategoryName</th>
+
+        </tr>
+        @foreach (var plan1 in plan.GroupBy(p => new { p.FaultType }))
+        {
+        <tr class="grp">
+            <th style="" colspan="2">@plan1.Key.FaultType</th>
+        </tr>
+        <tbody>
+            @foreach (var plan2 in plan1)
+                { 
+            <tr>
+                
+                <td>@plan2.SubCategoryName</td>
+                <td>@plan2.FaultQty</td>
+            </tr>
+                }
+            
+        </tbody>
+    }
+        }
+    </table>
+    </div>
 </div>
+<br /><br /><br /><br />
+
+
+
+    
+
+    <style>
+        table {
+            text-align: left;
+            border-collapse: collapse;
+            width: 100%;
+            color:black;
+        }
+
+        td, th {
+            border: 1px solid grey;
+            padding: 0.3em;
+        }
+
+        tr.cat th {
+            background: #A3DABE
+        }
+
+        tr.grp th {
+            background: #B9D9E3;
+            padding-left: 1em;
+        }
+
+        thead th {
+            font-weight: normal;
+        }
+
+        tbody td {
+            padding-left: 2em;
+        }
+        hr {
+             margin-top: 0.25rem; 
+             margin-bottom: 0.25rem; 
+             border: 0; 
+            border-top: 1px solid rgba(0,0,0,.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    </style>
 

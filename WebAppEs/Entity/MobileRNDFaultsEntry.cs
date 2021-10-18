@@ -38,7 +38,11 @@ namespace WebAppEs.Entity
 
         [Required]
         [StringLength(50)]
-        public int TotaCheckedQty { get; set; }
+        public string Shift { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public int TotalCheckedQty { get; set; }
 
         [Required]
         [StringLength(150)]

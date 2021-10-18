@@ -8,8 +8,58 @@
         color: black;
     }
 
-    #select2-ddlModel-container {
+    #select2-ddlModel-container, #select2-ddlCategory-container, #select2-ddlSubCategory-container{
         color: black;
+    }
+
+    .form-control {
+        border-radius: 0;
+        box-shadow: none;
+        border-color: #d2d6de
+    }
+
+    .select2-hidden-accessible {
+        border: 0 !important;
+        clip: rect(0 0 0 0) !important;
+        height: 1px !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        position: absolute !important;
+        width: 1px !important
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        height: 38px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple, .select2-container--default.select2-container--focus .select2-selection--single {
+        border-color: #80bdff;
+        height: 20px !important;
+        width: 100% !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        height: 20px !important;
+        width: 100% !important;
     }
 </style>
 <div class="row">
@@ -21,24 +71,21 @@
 </div>
 <div class="row">
     <div class="col-md-12 ">
-        <div class="x_panel">
-            <div class="x_title">
-                <h2>Fault's Entry</h2>
+        <div style="" class="x_panel shadow p-3 mb-5 bg-white rounded">
+            <div style="border-bottom: 2px solid #E6E9ED; margin-bottom: 0px; padding: 0px 0px 0px!important; " class="x_title">
+                <h2 style="color:black">Fault's Entry</h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li>
                         <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
-                    <li>
-                        <a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
                 </ul>
                 <div class="clearfix"></div>
             </div>
-            <div class="x_content">
+            <div style="margin-top:0px" class="x_content">
                 <br />
-                <form class="form-label-left input_mask" asp-action="CreateFaultsInfo">
+                <form class="form-label-left input_mask">
                     <div class="row">
-                        <div style="border: 1px solid #2a5440; padding: 10px; border-radius: 8px; background-color: aliceblue;" class="col-md-12">
+                        <div style="padding: 10px; border-radius: 8px; background-color: #fff;" class="col-md-12">
                             <input asp-for="Id" id="txtHiddenID" type="hidden">
                             <div class="row">
                                 <div class="col-md-3 col-sm-3  form-group has-feedback">
@@ -82,8 +129,8 @@
                                     <span id="ddlmodelError" class="error">Please select model!</span>
                                 </div>
                                 <div class="col-md-3 col-sm-3  form-group has-feedback">
-                                    <label>Lot No.</label>
-                                    <select asp-for="LotNo" id="ddlLot" class="form-control">
+                                    <label>Order</label>
+                                    <select  asp-for="LotNo" id="ddlLot" class="form-control">
                                         <option value="@Model.LotNo">--Select Lot--</option>
                                         <option value="1st">1st</option>
                                         <option value="2nd">2nd</option>
@@ -101,10 +148,10 @@
                                 
                             </div>
                             <div class="row">
-                                <div class="col-md-3 col-sm-3  form-group has-feedback">
+                                <div class="col-md-2 col-sm-2  form-group has-feedback">
                                     <label>Shipment</label>
-                                    <select asp-for="LotNo" id="ddShipment" class="form-control">
-                                        <option value="@Model.LotNo">--Select Shipment--</option>
+                                    <select asp-for="Shipment" id="ddShipment" class="form-control">
+                                        <option value="@Model.Shipment">--Select Shipment--</option>
                                         <option value="1st">1st</option>
                                         <option value="2nd">2nd</option>
                                         <option value="3rd">3rd</option>
@@ -116,25 +163,37 @@
                                         <option value="9th">9th</option>
                                         <option value="10th">10th</option>
                                     </select>
-                                    <span class="error">Please select Lot!</span>
+                                    <span class="error">Please select Shipment!</span>
                                 </div>
                                 <div class="col-md-3 col-sm-3  form-group has-feedback">
                                     <label>Shift</label>
-                                    <select asp-for="LotNo" id="ddShipment" class="form-control">
-                                        <option value="@Model.LotNo">--Select Shift--</option>
+                                    <select asp-for="Shift" id="ddShift" class="form-control">
+                                        <option value="@Model.Shift">--Select Shift--</option>
                                         <option value="A">A</option>
                                         <option value="B">B</option>
                                         <option value="G">G</option>
                                     </select>
-                                    <span class="error">Please select Lot!</span>
+                                    <span class="error">Please select Shift!</span>
                                 </div>
-                                <div style="text-align: center;" class="col-md-3 col-sm-3  form-group has-feedback">
-                                    <label style=" text-align: center; font-weight: 900; color: brown;">Total Production</label>
-                                    <input style=" border-color: #861111; text-align: center;" onclick="selectAllText(this.id)" asp-for="TotalCheckedQty" type="number" class="form-control" id="txtTotalCheckQty" placeholder="Enter Qty.">
+                                <div style="text-align: center;" class="col-md-2 col-sm-2  form-group has-feedback">
+                                    <label style=" text-align: center; font-weight: 900; color: #0c8120;">Total Production</label>
+                                    <input style=" border-color: #0c8120; text-align: center;" onclick="selectAllText(this.id)" asp-for="TotalCheckedQty" type="number" class="form-control" id="txtTotalCheckQty" placeholder="Enter Qty.">
+                                    <span class="error">Please enter valid Quantity!</span>
                                 </div>
                                 <div style="" class="col-md-3 col-sm-3  form-group has-feedback">
-                                    <label style="">Type Of Prod.</label>
-                                    <input asp-for="TotalCheckedQty" class="form-control" id="txtTotalCheckQty" placeholder="Enter Type of Prod.">
+                                    <label style="">Type Of Production</label>
+                                    <select asp-for="TypeOfProduction" id="ddTypeOfProduction" class="form-control">
+                                        <option value="">--Select Production Type--</option>
+                                        <option value="Trial Production">Trial Production</option>
+                                        <option value="Mass Production">Mass Production</option>
+                                        <option value="Repair">Repair</option>
+                                    </select>
+                                    <span class="error">Please select Type of Production!</span>
+                                </div>
+                                <div style="text-align: center;" class="col-md-2 col-sm-2  form-group has-feedback">
+                                    <label style=" text-align: center; font-weight: 900; color: #0c8120;">QC Pass</label>
+                                    <input style=" border-color: #0c8120; text-align: center;" onclick="selectAllText(this.id)" asp-for="QCPass" type="number" class="form-control" id="txtQCPass" placeholder="Enter Qty.">
+                                    <span class="error">Please enter valid Quantity!</span>
                                 </div>
                             </div>
                         </div>
@@ -146,77 +205,61 @@
     </div>
 </div>
 
-<div class="x_panel">
-    <div class="x_title">
-        <h2>Faults Details</h2>
-        <ul class="nav navbar-right panel_toolbox">
-            <li>
-                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Settings 1</a>
-                    <a class="dropdown-item" href="#">Settings 2</a>
-                </div>
-            </li>
-            <li>
-                <a class="close-link"><i class="fa fa-close"></i></a>
-            </li>
-        </ul>
-        <div class="clearfix"></div>
-    </div>
+<div class="x_panel shadow p-3 mb-5 bg-white rounded">
     <div class="container">
         <!-- start form for validation -->
         <form id="demo-form">
 
-            <div style="border: 1px solid #2a5440; padding:10px; margin-top: 15px; border-radius: 8px;">
-                <div class="row">>
+            <div style="">
+                <div class="row">
                     <div class="col-md-3">
-                        <label for="txtFaultType">Fault Type* :</label>
-                        <input style=" background-color: #f7f7f7;" type="text" id="txtFaultType" class="form-control form-control-sm" name="txtFaultType" />
-                        <span class="error">Please enter fault type</span>
+                        <label for="ddlCategory">Category* :</label>
+                        <select required id="ddlCategory" class="form-control">
+                            <option value="">--Select Category--</option>
+                            @foreach (var item in Model.MRNDQC_CategoryVM)
+                            {
+                <option value="@item.Id">@item.CategoryName</option>
+}
+                        </select>
+                        <span class="error">Please select Category!</span>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="ddlFaultType">Fault Type* :</label>
+                        <select id="ddlFaultType" class="form-control">
+                            <option value="">--Select Fault Type--</option>
+                            <option value="F">Functional</option>
+                            <option value="A">Aesthetic</option>
+                        </select>
+                        <span class="error">Please select Fault Type!</span>
                     </div>
                     <div class="col-md-3">
-                        <label for="quantity">Fault Qty.* :</label>
-                        <input style=" background-color: #f7f7f7;" type="number" id="quantity" class="form-control form-control-sm" name="quantity" />
-                        <span class="error">Valid quantity required</span>
+                        <label for="ddlSubCategory">Sub Category* :</label>
+                        <select id="ddlSubCategory" class="form-control">
+                            <option value="">--Select Sub Category--</option>
+                        </select>
+                        <span class="error">Please select Sub Category</span>
+                    </div>
+                    <div style="text-align: center;" class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style=" text-align: center; font-weight: 900; color: #0c8120;">Quantity</label>
+                        <input style=" border-color: #0c8120; text-align: center;" onclick="selectAllText(this.id)" type="number" class="form-control" id="txtQTY" placeholder="Enter Qty.">
+                        <span class="error">Enter valid quantity!</span>
+                    </div>
+                    <div class="col-md-2" style="text-align: center; margin-top: 15px;">
+                        <input type="button" class="addbutton box-shadow" id="add" value="Add" />
                     </div>
                 </div>
-                <div style="margin-top:5px" class="row">
-                    <div class="col-md-4">
-                        <label for="txtRootCause">Root Cause* :</label>
-                        <textarea style=" background-color: #f7f7f7;" id="txtRootCause" class="form-control form-control-sm"></textarea>
-                        <span class="error">Root Cause required</span>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="txtSolution">Solution* :</label>
-                        <textarea style=" background-color: #f7f7f7;" id="txtSolution" class="form-control form-control-sm"></textarea>
-                        <span class="error">Solution required</span>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="txtRemarks">Remarks</label>
-                        <textarea style=" background-color: #f7f7f7;" id="txtRemarks" class="form-control form-control-sm"></textarea>
-                    </div>
-                </div>
-                <div style="text-align: center; ">
-                    <input type="button" class="addbutton" id="add" value="Add" />
-                </div>
+            </div>
+            <div id="faultsItem">
+
             </div>
         </form>
-        <!-- end form for validations -->
-        <div style="margin-top:10px" id="faultsItem" class="tablecontainer">
-
-        </div>
-        <div style="margin-top:10px">
-            <div class="row">
-                <div class="col-md-6">
-                </div>
-                <div style="text-align:end" class="col-md-6">
-                    <button onclick="RedirectToPage()" class="btn btn-dark">Back To List</button>
-                    <button type="button" id="submit" class="btn btn-success">Submit</button>
-                </div>
-            </div>
+    </div>
+</div>
+<div style="margin-top:10px">
+    <div class="row">
+        <div style="text-align:center" class="col-md-12">
+            <button onclick="RedirectToPage()" class="btn btn-dark">Back To List</button>
+            <button type="button" id="submit" class="btn btn-success">Submit</button>
         </div>
     </div>
 </div>
@@ -232,7 +275,7 @@
 @section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script>
+<script>
         $(document).ready(function () {
             /*alert("");*/
             const today = (function () {
@@ -246,7 +289,7 @@
             //    alert($("#ddlPartsModel").val());
             //});
 
-            $('#ddlModel').select2({});
+            $('#ddlModel, #ddlCategory, #ddlSubCategory').select2({});
 
             $('.numberFunctional').keyup(function () {
                 //alert("0")
@@ -261,13 +304,62 @@
                 $("#textTotalAesthetic").text(Number(val1) + Number(val2));
             });
 
+            $('#ddlCategory').on("change", function () {
+                $('#ddlFaultType').val("");
+                $('#ddlSubCategory').html('');
+                var options = '';
+                options += '<option value="">--Select Sub Category--</option>';
+                $('#ddlSubCategory').append(options);
+            });
 
+            $('#ddlFaultType').on("change", function () {
+                var category = $('#ddlCategory').val();
+                var faultType = $('#ddlFaultType').val();
+                if (category != "") {
+                    var obj = { "CategoryID": category, "FaultType": faultType};
+                    AjaxCall('@Url.Action("GetSubCategoryByCategoryID", "SubCategory")', obj, 'POST').done(function (response) {
+                        if (response.length > 0) {
+                            console.log(response);
+
+                            $('#ddlSubCategory').html('');
+                            var options = '';
+                            options += '<option value="">--Select Sub Category--</option>';
+                            for (var i = 0; i < response.length; i++) {
+                                options += '<option value="' + response[i].id + '">' + response[i].subCategoryName + '</option>';
+                            }
+                            $('#ddlSubCategory').append(options);
+
+                        }
+                        else {
+                            $('#ddlSubCategory').html('');
+                            var options = '';
+                            options += '<option value="">--Select Sub Category--</option>';
+                            $('#ddlSubCategory').append(options);
+                        }
+                    }).fail(function (error) {
+                        alert(error.StatusText);
+                    });
+                }
+                else {
+                    alert("Select Category First");
+                    $('#ddlFaultType').val("");
+                }
+
+            });
         });
         function selectAllText(senderId) {
             document.getElementById(senderId).focus();
             document.getElementById(senderId).select();
         }
-    </script>
+        function AjaxCall(url, data, type) {
+            return $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                //contentType: 'application/json'
+            });
+        }
+</script>
 
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script type="text/javascript">
@@ -357,11 +449,13 @@
                 if (LoadDataForEidit.length != 0) {
                     for (var h = 0; h < LoadDataForEidit.length; h++) {
                         faultsItem.push({
+                            CategoryID: LoadDataForEidit[h].categoryID,
+                            CategoryName: LoadDataForEidit[h].categoryName,
+                            SubCategoryID: LoadDataForEidit[h].subCategoryID,
+                            SubCategoryName: LoadDataForEidit[h].subCategoryName,
                             FaultType: LoadDataForEidit[h].faultType,
+                            FaultTypeName: LoadDataForEidit[h].faultType,
                             FaultQty: LoadDataForEidit[h].faultQty,
-                            RootCause: LoadDataForEidit[h].rootCause,
-                            Solution: LoadDataForEidit[h].solution,
-                            Remarks: LoadDataForEidit[h].remarks,
                         });
                     }
                     GeneratedItemsTable();
@@ -371,48 +465,59 @@
             //Add button click function
             $('#add').click(function () {
                 var isValidItem = true;
-                if ($('#txtFaultType').val().trim() == '') {
+                if ($('#ddlCategory').val().trim() == '') {
                     isValidItem = false;
-                    $('#txtFaultType').siblings('span.error').css('visibility', 'visible');
+                    $('#ddlCategory').siblings('span.error').css('visibility', 'visible');
                 }
                 else {
-                    $('#txtFaultType').siblings('span.error').css('visibility', 'hidden');
+                    var CategoryID = $('#ddlCategory').val().trim();
+                    var CategoryText = $("#ddlCategory option:selected").text();
+                    $('#ddlCategory').siblings('span.error').css('visibility', 'hidden');
+                }
+                if ($('#ddlFaultType').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlFaultType').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    var FaultType = $('#ddlFaultType').val().trim();
+                    var FaulttypeName = $("#ddlFaultType option:selected").text();
+                    $('#ddlFaultType').siblings('span.error').css('visibility', 'hidden');
+                }
+                if ($('#ddlSubCategory').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlSubCategory').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    var SubCategoryID = $('#ddlSubCategory').val().trim();
+                    var SubCategoryText = $("#ddlSubCategory option:selected").text();
+                    $('#ddlSubCategory').siblings('span.error').css('visibility', 'hidden');
                 }
 
-                if (!($('#quantity').val().trim() != '' && !isNaN($('#quantity').val().trim()))) {
+                if (!($('#txtQTY').val().trim() != '' && !isNaN($('#txtQTY').val().trim()))) {
                     isValidItem = false;
-                    $('#quantity').siblings('span.error').css('visibility', 'visible');
+                    $('#txtQTY').siblings('span.error').css('visibility', 'visible');
                 }
                 else {
-                    $('#quantity').siblings('span.error').css('visibility', 'hidden');
+                    $('#txtQTY').siblings('span.error').css('visibility', 'hidden');
                 }
-
-                if ($('#txtRootCause').val().trim() == '') {
-                    isValidItem = false;
-                    $('#txtRootCause').siblings('span.error').css('visibility', 'visible');
-                }
-                else {
-                    $('#txtRootCause').siblings('span.error').css('visibility', 'hidden');
-                }
-
-                if ($('#txtSolution').val().trim() == '') {
-                    isValidItem = false;
-                    $('#txtSolution').siblings('span.error').css('visibility', 'visible');
-                }
-                else {
-                    $('#txtSolution').siblings('span.error').css('visibility', 'hidden');
-                }
-                $('#txtRemarks').siblings('span.error').css('visibility', 'hidden');
                 if (isValidItem) {
-                    faultsItem.push({
-                        FaultType: $('#txtFaultType').val().trim(),
-                        FaultQty: parseInt($('#quantity').val().trim()),
-                        RootCause: $('#txtRootCause').val().trim(),
-                        Solution: $('#txtSolution').val().trim(),
-                        Remarks: $('#txtRemarks').val().trim(),
-                    });
-                    $('#txtFaultType').val('').focus();
-                    $('#quantity,#rate,#txtRootCause, #txtSolution, #txtRemarks').val('');
+                    var isExixtsSubCategory = checkIfObjectExist(faultsItem, SubCategoryText, SubCategoryID)
+                    if (isExixtsSubCategory) {
+                        alert("You already Enter this ( " + SubCategoryText +" ) sub category, Please Remove to update!");
+                    }
+                    else {
+                        faultsItem.push({
+                            CategoryID: CategoryID,
+                            CategoryName: CategoryText,
+                            SubCategoryID: SubCategoryID,
+                            SubCategoryName: SubCategoryText,
+                            FaultType: FaultType,
+                            FaultTypeName: FaulttypeName,
+                            FaultQty: parseInt($('#txtQTY').val().trim()),
+                        });
+                    }
+                    $('#ddlSubCategory').val("").change().focus();
+                    $('#txtQTY').val("");
                 }
                 GeneratedItemsTable();
             });
@@ -456,6 +561,49 @@
                 else {
                     $('#ddlLot').siblings('span.error').css('visibility', 'hidden');
                 }
+
+                if ($('#ddShipment').val().trim() == '') {
+                    $('#ddShipment').siblings('span.error').css('visibility', 'visible');
+                    isAllValid = false;
+                }
+                else {
+                    $('#ddShipment').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                if ($('#ddShift').val().trim() == '') {
+                    $('#ddShift').siblings('span.error').css('visibility', 'visible');
+                    isAllValid = false;
+                }
+                else {
+                    $('#ddShift').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                
+                if (!($('#txtTotalCheckQty').val().trim() != '' && !isNaN($('#txtTotalCheckQty').val().trim()))) {
+                    isValidItem = false;
+                    $('#txtTotalCheckQty').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#txtTotalCheckQty').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                if ($('#ddTypeOfProduction').val().trim() == '') {
+                    $('#ddTypeOfProduction').siblings('span.error').css('visibility', 'visible');
+                    isAllValid = false;
+                }
+                else {
+                    $('#ddTypeOfProduction').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                
+                if (!($('#txtQCPass').val().trim() != '' && !isNaN($('#txtQCPass').val().trim()))) {
+                    isValidItem = false;
+                    $('#txtQCPass').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#txtQCPass').siblings('span.error').css('visibility', 'hidden');
+                }
+
                 //Save if valid
                 if (isAllValid) {
                     var data = {
@@ -463,8 +611,14 @@
                         LineNo: $('#ddlLine').val().trim(),
                         PartsModelID: $('#ddlModel').val().trim(),
                         LotNo: $('#ddlLot').val().trim(),
+                        Shipment: $('#ddShipment').val().trim(),
+                        Shift: $('#ddShift').val().trim(),
+                        TotalCheckedQty: Number($('#txtTotalCheckQty').val().trim()),
+                        TypeOfProduction: $('#ddTypeOfProduction').val().trim(),
+                        QCPass: Number($('#txtQCPass').val().trim()),
                         MobileRNDFaultDetailsViewModel: faultsItem
                     }
+                    console.log(data);
 
                     $(this).val('Please wait...');
 
@@ -485,51 +639,51 @@
                 }
             });
 
-            $('#ddlLot').on('change', function () {
-                //alert($('#ddlLine').val().trim());
+            //$('#ddlLot').on('change', function () {
+            //    //alert($('#ddlLine').val().trim());
 
-                if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '') {
-                    alert("Please Select Line and Model First");
-                    $('#ddlLot').val("");
-                }
-                else {
-                    DropDownChangeData();
-                }
-            });
-            $('#ddlModel').on('change', function () {
-                if ($('#ddlLine').val().trim() == '') {
-                    alert("Please Select Line First!");
-                    $('#ddlModel').val("");
-                }
-                else if ($('#ddlLine').val().trim() != '' && $('#ddlLot').val().trim() == '')
-                {
+            //    if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '') {
+            //        alert("Please Select Line and Model First");
+            //        $('#ddlLot').val("");
+            //    }
+            //    else {
+            //        DropDownChangeData();
+            //    }
+            //});
+            //$('#ddlModel').on('change', function () {
+            //    if ($('#ddlLine').val().trim() == '') {
+            //        alert("Please Select Line First!");
+            //        $('#ddlModel').val("");
+            //    }
+            //    else if ($('#ddlLine').val().trim() != '' && $('#ddlLot').val().trim() == '')
+            //    {
 
-                }
-                else {
-                    DropDownChangeData();
-                }
-            });
-            $('#ddlLine').on('change', function () {
-                //alert($('#ddlLine').val().trim());
+            //    }
+            //    else {
+            //        DropDownChangeData();
+            //    }
+            //});
+            //$('#ddlLine').on('change', function () {
+            //    //alert($('#ddlLine').val().trim());
 
-                if ($('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
-                    //alert("Please Select Line and Model First");
-                    //$('#ddlLot').val("");
-                    ////alert($('#txtDate').val().trim());
-                }
-                else {
-                    DropDownChangeData();
-                }
-            });
-            $('#txtDate').on('change', function () {
+            //    if ($('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
+            //        //alert("Please Select Line and Model First");
+            //        //$('#ddlLot').val("");
+            //        ////alert($('#txtDate').val().trim());
+            //    }
+            //    else {
+            //        DropDownChangeData();
+            //    }
+            //});
+            //$('#txtDate').on('change', function () {
 
-                if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
+            //    if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
 
-                }
-                else {
-                    DropDownChangeData();
-                }
-            });
+            //    }
+            //    else {
+            //        DropDownChangeData();
+            //    }
+            //});
 
             function DropDownChangeData() {
                 var data = {
@@ -605,19 +759,17 @@
                     });
             }
             //function for show added items in table
-
             function GeneratedItemsTable() {
                 if (faultsItem.length > 0) {
                     var $table = $('<table id="datatable-fixed-header" class="table table-sm table-striped table-bordered" style="width:100%"/>');
-                    $table.append('<thead style = "background-color: #2a3f54; color: white;"><tr><th>Faults Type</th><th>Quantity</th><th>Root Cause</th><th>Solution</th><th>Remarks</th><th></th></tr></thead>');
+                    $table.append('<thead style = "background-color: #323232; color: white;"><tr><th>Category</th><th>Fault Type</th><th>Sub Category</th><th>Quantity</th><th></th></tr></thead>');
                     var $tbody = $('<tbody/>');
                     $.each(faultsItem, function (i, val) {
                         var $row = $('<tr/>');
-                        $row.append($('<td/>').html(val.FaultType));
+                        $row.append($('<td/>').html(val.CategoryName));
+                        $row.append($('<td/>').html(val.FaultTypeName));
+                        $row.append($('<td/>').html(val.SubCategoryName));
                         $row.append($('<td/>').html(val.FaultQty));
-                        $row.append($('<td/>').html(val.RootCause));
-                        $row.append($('<td/>').html(val.Solution));
-                        $row.append($('<td/>').html(val.Remarks));
                         var $remove = $('<a href="#"><i style="font-size: 17px; color:red;" class="fa fa-trash"></i></a>');
                         $remove.click(function (e) {
                             e.preventDefault();
@@ -635,6 +787,50 @@
                     $('#faultsItem').html('');
                 }
             }
+
+            function checkIfObjectExist(faultsItem, text, id) {
+                console.log(faultsItem);
+                if (faultsItem.length > 0) {
+                    for (var i = 0; i < faultsItem.length; i++) {
+                        if (faultsItem[i].SubCategoryName === text && faultsItem[i].SubCategoryID === id) {
+                            return true;
+                        }
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+            function ConfirmDialog(message) {
+                $('<div></div>').appendTo('body')
+                    .html('<div><h6>' + message + '?</h6></div>')
+                    .dialog({
+                        modal: true,
+                        title: 'Delete message',
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: false,
+                        buttons: {
+                            Yes: function () {
+                                // $(obj).removeAttr('onclick');                                
+                                // $(obj).parents('.Parent').remove();
+
+                                $('body').append('<h1>Confirm Dialog Result: <i>Yes</i></h1>');
+
+                                $(this).dialog("close");
+                            },
+                            No: function () {
+                                $('body').append('<h1>Confirm Dialog Result: <i>No</i></h1>');
+
+                                $(this).dialog("close");
+                            }
+                        },
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+            };
         });
 
         function RedirectToPage() {
@@ -755,5 +951,16 @@
         -webkit-border-radius: 0px;
         -moz-border-radius: 0px;
         background-image: none;
+    }
+
+    .bg-white {
+        background: #fff !important;
+        border: 1px solid #fff !important;
+        color: #19416c;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #32a73e;
+        border-radius: 6px;
     }
 </style>

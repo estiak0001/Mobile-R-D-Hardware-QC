@@ -195,37 +195,29 @@ namespace WebAppEs.Services
 
         public  bool AddFaultsEntry(MobileRNDFaultsEntryViewModel viewModel)
         {
-			var datetimetoday = DateTime.Today;
-
-//			var existing = await _context.MobileRNDFaultsEntry.Where(x => x.Date == DateTime.Today).FirstOrDefaultAsync();
-
-
 			if (viewModel == null)
             {
                 return false;
             }
             else
             {
-				//_context.MobileRNDFaultsEntry.Add(new MobileRNDFaultsEntry()
-				//{
-				//	Date = viewModel.Date,
-				//	EmployeeID = viewModel.EmployeeID,
-				//	LineNo = viewModel.LineNo,
-				//	PartsModelID = viewModel.PartsModelID,
-				//	LotNo = viewModel.LotNo,
-				//	TotaCheckedQty = viewModel.TotalCheckedQty == null ? 0 : (int)viewModel.TotalCheckedQty,
-				//	FuncMaterialFault = viewModel.FuncMaterialFault == null ? 0 : (int)viewModel.FuncMaterialFault,
-				//	FuncProductionFault = viewModel.FuncProductionFault == null ? 0 : (int)viewModel.FuncProductionFault,
-				//	FuncSoftwareFault = viewModel.FuncSoftwareFault == null ? 0 : (int)viewModel.FuncSoftwareFault,
-				//	AesthMaterialFault = viewModel.AesthMaterialFault == null ? 0 : (int)viewModel.AesthMaterialFault,
-				//	AesthProductionFault = viewModel.AesthProductionFault == null ? 0 : (int)viewModel.AesthProductionFault,
-				//	TotalFunctionalFault = viewModel.TotalFunctionalFault,
-				//	TotalAestheticFault = viewModel.TotalAestheticFault,
-				//	UserID = viewModel.UserID
-				//});
+				_context.MobileRNDFaultsEntry.Add(new MobileRNDFaultsEntry()
+				{
+					Date = viewModel.Date,
+					EmployeeID = viewModel.EmployeeID,
+					LineNo = viewModel.LineNo,
+					PartsModelID = viewModel.PartsModelID,
+					LotNo = viewModel.LotNo,
+					TotalCheckedQty = viewModel.TotalCheckedQty,
+					Shipment = viewModel.Shipment,
+					Shift = viewModel.Shift,
+					TypeOfProduction = viewModel.TypeOfProduction,
+					QCPass = viewModel.QCPass,
+					LUser = viewModel.UserID
+				}) ;
             }
             var result =  _context.SaveChanges();
-            return true;
+            return result>0;
 		}
 
 		public  bool UpdateFaultsEntry(MobileRNDFaultsEntryViewModel viewModel)
@@ -249,7 +241,7 @@ namespace WebAppEs.Services
 					LineNo = viewModel.LineNo,
 					PartsModelID = viewModel.PartsModelID,
 					LotNo = viewModel.LotNo,
-					TotaCheckedQty = viewModel.TotalCheckedQty == null ? 0 : (int)viewModel.TotalCheckedQty,
+					TotalCheckedQty = viewModel.TotalCheckedQty,
 					
 				});
 			}
@@ -276,13 +268,16 @@ namespace WebAppEs.Services
 							 //DateString =  faults.Date.ToString("MM/dd/yyyy"),
 							 Line = "Line " + faults.LineNo,
 							 ModelName = rm.ModelName,
-							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Lot",
-							 TotalCheckedQty = faults.TotaCheckedQty,
-
+							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
+							 TotalCheckedQty = faults.TotalCheckedQty,
+							 Shipment = faults.Shipment,
+							 Shift = faults.Shift,
+							 TypeOfProduction = faults.TypeOfProduction,
+							 QCPass = faults.QCPass,
 							 CreateDate = faults.CreatedOn,
 							 LineNo = faults.LineNo,
 							 StatusIsToday = faults.Date == DateTime.Today ? true : false
-						 }).Distinct().OrderBy(d => d.Date).ThenByDescending(x => x.TotalFuncAes).Where(p=> (EmployeeID == "" || p.EmployeeID == EmployeeID)).ToList();
+						 }).Distinct().OrderBy(d => d.Date).ToList();
 
 			return items;
 		}
@@ -319,15 +314,15 @@ namespace WebAppEs.Services
 							  //DateString = faults.Date == null ? null : String.Format("{0:MM/dd/yyyy}", faults.Date),
 							  Line = "Line " + faults.LineNo,
 							  ModelName = rm.ModelName,
-							  ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Lot",
+							  ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
 							  PartsModelID = faults.PartsModelID,
 							  LotNo = faults.LotNo,
-							  TotalCheckedQty = faults.TotaCheckedQty,
+							  TotalCheckedQty = faults.TotalCheckedQty,
 
 							  CreateDate = faults.CreatedOn,
 							  LineNo = faults.LineNo,
 							  StatusIsToday = faults.Date == DateTime.Today ? true : false
-						  }).Distinct().OrderBy(d => d.Date).ThenByDescending(x => x.TotalFuncAes).Where(s => ((startDate == null && toDate == null) || (s.Date >= startDate && s.Date <= toDate)) && (lineNo == "" || s.LineNo == lineNo) && (ModelID == Guid.Empty || s.PartsModelID == ModelID) && (lotNo == "" || s.LotNo == lotNo) && (EmployeeID == "" || s.EmployeeID == EmployeeID)).ToList();
+						  }).Distinct().OrderBy(d => d.Date).ThenByDescending(x => x.TotalCheckedQty).Where(s => ((startDate == null && toDate == null) || (s.Date >= startDate && s.Date <= toDate)) && (lineNo == "" || s.LineNo == lineNo) && (ModelID == Guid.Empty || s.PartsModelID == ModelID) && (lotNo == "" || s.LotNo == lotNo) && (EmployeeID == "" || s.EmployeeID == EmployeeID)).ToList();
 			return items;
 		}
 
@@ -347,20 +342,21 @@ namespace WebAppEs.Services
 							 Line = "Line " + faults.LineNo,
 							 LineNo = faults.LineNo,
 							 LotNo = faults.LotNo,
-							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Lot",
-							 TotalCheckedQty = faults.TotaCheckedQty,
+							 Shipment = faults.Shipment,
+							 Shift = faults.Shift,
+							 TypeOfProduction = faults.TypeOfProduction,
+							 QCPass = faults.QCPass,
+							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
+							 TotalCheckedQty = faults.TotalCheckedQty,
 							 PartsModelID = faults.PartsModelID,
-							 Disabled = "disabled"
+							 Disabled = "disabled",
+							 ModelName = rm.ModelName,
 						 }).FirstOrDefault();
 			return items;
 		}
 
         public bool AddFaultsDetails(MobileRNDFaultDetailsViewModel viewModel)
         {
-			//var datetimetoday = DateTime.Today;
-
-			//			var existing = await _context.MobileRNDFaultsEntry.Where(x => x.Date == DateTime.Today).FirstOrDefaultAsync();
-
 			if (viewModel == null)
 			{
 				return false;
@@ -372,17 +368,21 @@ namespace WebAppEs.Services
 					Date = viewModel.Date,
 					EmployeeID = viewModel.EmployeeID,
 					FaultEntryID = viewModel.FaultEntryId,
-					
+					CategoryID = viewModel.CategoryID,
+					SubCategoryID = viewModel.SubCategoryID,
+					FaultQty = viewModel.FaultQty,
+					UpdatedOn = DateTime.Today,
+					LUser = viewModel.UserID
 				});
 			}
 			var result = _context.SaveChanges();
 
-			return true;
+			return result>0;
 		}
 
-        public MobileRNDFaultsEntryViewModel GetSortedFaults(DateTime? sortdate, string lineNo, Guid ModelID, string lotNo)
+        public MobileRNDFaultsEntryViewModel GetSortedFaults(DateTime? sortdate, string lineNo, Guid ModelID, string lotNo, string Shipment, string Shift, string TypeOfProduction)
         {
-			var items = (from faults in _context.MobileRNDFaultsEntry.Where(x => x.Date == sortdate && x.LineNo == lineNo && x.PartsModelID == ModelID && x.LotNo == lotNo)
+			var items = (from faults in _context.MobileRNDFaultsEntry.Where(x => x.Date == sortdate && x.LineNo == lineNo && x.PartsModelID == ModelID && x.LotNo == lotNo && x.Shipment == Shipment && x.Shift == Shift && x.TypeOfProduction == TypeOfProduction)
 						 join model in _context.MobileRNDPartsModels
 								on new { X1 = faults.PartsModelID } equals new { X1 = model.Id }
 								into rmp
@@ -396,8 +396,8 @@ namespace WebAppEs.Services
 							 Line = "Line " + faults.LineNo,
 							 LineNo = faults.LineNo,
 							 LotNo = faults.LotNo,
-							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Lot",
-							 TotalCheckedQty = faults.TotaCheckedQty,
+							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
+							 TotalCheckedQty = faults.TotalCheckedQty,
 							 PartsModelID = faults.PartsModelID,
 							 Disabled = "disabled"
 						 }).FirstOrDefault();
@@ -442,13 +442,25 @@ namespace WebAppEs.Services
         public List<MobileRNDFaultDetailsViewModel> GetFaultsDetails(Guid id)
         {
             var items = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == id)
-
-                         select new MobileRNDFaultDetailsViewModel()
+						 join cat in _context.MRNDQC_Category
+								on new { X1 = fadt.CategoryID } equals new { X1 = cat.Id }
+								into rmp
+						 from catt in rmp.DefaultIfEmpty()
+						 join subcat in _context.MRNDQC_SubCategory
+								on new { X1 = fadt.SubCategoryID } equals new { X1 = subcat.Id }
+								into subrmp
+						 from subcatt in subrmp.DefaultIfEmpty()
+						 select new MobileRNDFaultDetailsViewModel()
                          {
                              FaultEntryId = fadt.FaultEntryID,
                              EmployeeID = fadt.EmployeeID,
                              Date = fadt.Date,
-
+							 CategoryID = fadt.CategoryID,
+							 SubCategoryID = fadt.SubCategoryID,
+							 CategoryName = catt.CategoryName,
+							 SubCategoryName = subcatt.SubCategoryName,
+							 FaultQty = fadt.FaultQty,
+							 FaultType = subcatt.FaultType == "A" ? "Aesthetic" : "Functional"
                          }).ToList();
 
 			return items;

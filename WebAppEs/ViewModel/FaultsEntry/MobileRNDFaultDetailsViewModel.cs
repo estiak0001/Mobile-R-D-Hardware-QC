@@ -16,10 +16,13 @@ namespace WebAppEs.ViewModel.FaultsEntry
 
         public int FaultQty { get; set; }
 
+        public Guid CategoryID { get; set; }
 
-        public string RootCause { get; set; }
-        public string Solution { get; set; }
-        public string Remarks { get; set; }
+        public Guid SubCategoryID { get; set; }
+
         public Guid UserID { get; set; }
+
+        public string CategoryName { get; set; }
+        public string SubCategoryName { get; set; }
     }
 }

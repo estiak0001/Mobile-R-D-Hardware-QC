@@ -35,7 +35,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="wwwroot\Reports\AllFaultsListReport.rdlc" />
     <None Include="wwwroot\vendors\bootstrap\.github\CODEOWNERS" />
     <None Include="wwwroot\vendors\bootstrap\.github\CONTRIBUTING.md" />
     <None Include="wwwroot\vendors\bootstrap\.github\ISSUE_TEMPLATE\bug.md" />

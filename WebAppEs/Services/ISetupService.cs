@@ -23,5 +23,6 @@ namespace WebAppEs.Services
         List<MRNDQC_SubCategoryVM> GetSubCategory(Guid CatId);
         List<MRNDQC_SubCategoryVM> GetSubCatList();
         MRNDQC_SubCategoryVM GetSubCategory2(Guid Id);
+        List<MRNDQC_SubCategoryVM> GetSubCategory3(Guid Id, string FaultType);
     }
 }

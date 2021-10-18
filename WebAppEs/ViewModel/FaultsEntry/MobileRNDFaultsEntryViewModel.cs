@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAppEs.ViewModel.Category;
 using WebAppEs.ViewModel.PartsModel;
 
 namespace WebAppEs.ViewModel.FaultsEntry
@@ -29,42 +30,29 @@ namespace WebAppEs.ViewModel.FaultsEntry
         public string LotNo { get; set; }
         public string Lot { get; set; }
 
-        public int? FuncMaterialFault { get; set; }
+        [Required]
+        public string Shipment { get; set; }
 
-        public int? FuncProductionFault { get; set; }
+        [Required]
+        public string Shift { get; set; }
 
-        public int? FuncSoftwareFault { get; set; }
+        [Required]
+        public int TotalCheckedQty { get; set; }
 
-        public int? AesthMaterialFault { get; set; }
+        [Required]
+        public string TypeOfProduction { get; set; }
 
-        public int? AesthProductionFault { get; set; }
-
-        public double? FuncMaterialFaultd { get; set; }
-
-        public double? FuncProductionFaultd { get; set; }
-
-        public double? FuncSoftwareFaultd { get; set; }
-
-        public double? AesthMaterialFaultd { get; set; }
-
-        public double? AesthProductionFaultd{ get; set; }
-
-        public int TotalFunctionalFault { get; set; }
-
-        public int TotalAestheticFault { get; set; }
-        public double? TotalFunctionalFaultd { get; set; }
-
-        public double? TotalAestheticFaultd { get; set; }
-        public int? TotalCheckedQty { get; set; }
+        public int QCPass { get; set; }
 
         public IEnumerable<PartsModelViewModel> PartsModelViewModel { get; set; }
+        public IEnumerable<MRNDQC_CategoryVM> MRNDQC_CategoryVM { get; set; }
+        public IEnumerable<MRNDQC_SubCategoryVM> MRNDQC_SubCategoryVM { get; set; }
         public IEnumerable<MobileRNDFaultsEntryViewModel> MobileRNDFaultsEntryViewModelList { get; set; }
         public string ButtonText { get; set; }
         public string Disabled { get; set; }
         public DateTime CreateDate { get; set; }
 
         public IEnumerable<MobileRNDFaultDetailsViewModel> MobileRNDFaultDetailsViewModel { get; set; }
-        public int TotalFuncAes { get; set; }
         public bool StatusIsToday { get; set; }
         public Guid UserID { get; set; }
     }
