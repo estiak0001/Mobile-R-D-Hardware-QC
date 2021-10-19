@@ -4,57 +4,60 @@
     ViewData["Title"] = "Home Page";
 }
 
-<!-- top tiles -->
-<div class="row" style="">
-    <h1>Dashboard</h1>
-</div>
+<div class="x_panel shadow p-3 mb-5 bg-white rounded">
+    <div class="container">
+        <div class="x_title">
+            <h2>Dashboard</h2>
+            <div class="nav navbar-right panel_toolbox">
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div style="display:none" class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="card-counter danger">
+                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Today Total</h2>
+                            <i class="fa fa-code-fork"></i>
+                            <span class="count-numbers">@Model.TodayTF</span>
+                            <div style="padding-left: 45px;">
+                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.TodayTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.TodayTFAes</span>&nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.TodayTotalCheck</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="card-counter primary">
+                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Day Total</h2>
+                            <i class="fa fa-code-fork"></i>
+                            <span class="count-numbers">@Model.LastDayTF</span>
+                            <div style="padding-left: 45px;">
+                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastDayTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastDayTFAes</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastDayTotalCheck</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="card-counter success">
+                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Week Total</h2>
+                            <i class="fa fa-code-fork"></i>
+                            <span class="count-numbers">@Model.LastWeekTF</span>
+                            <div style="padding-left: 45px;">
+                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastWeekTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastWeekTFAes</span>&nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastWeekTotalCheck</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div style="background-color: #137b89;" class="card-counter info">
+                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Month Total</h2>
+                            <i class="fa fa-code-fork"></i>
+                            <span class="count-numbers">@Model.LastMonthTF</span>
+                            <div style="padding-left: 45px;">
+                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastMonthTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastMonthTFAes</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastMonthTotalCheck</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-<div style="display:none" class="container">
-    <div class="row">
-
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="card-counter danger">
-                <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Today Total</h2>
-                <i class="fa fa-code-fork"></i>
-                <span class="count-numbers">@Model.TodayTF</span>
-                <div style="padding-left: 45px;">
-                    <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.TodayTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.TodayTFAes</span>&nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.TodayTotalCheck</span></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="card-counter primary">
-                <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Day Total</h2>
-                <i class="fa fa-code-fork"></i>
-                <span class="count-numbers">@Model.LastDayTF</span>
-                <div style="padding-left: 45px;">
-                    <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastDayTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastDayTFAes</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastDayTotalCheck</span></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="card-counter success">
-                <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Week Total</h2>
-                <i class="fa fa-code-fork"></i>
-                <span class="count-numbers">@Model.LastWeekTF</span>
-                <div style="padding-left: 45px;">
-                    <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastWeekTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastWeekTFAes</span>&nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastWeekTotalCheck</span></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div style="background-color: #137b89;" class="card-counter info">
-                <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Month Total</h2>
-                <i class="fa fa-code-fork"></i>
-                <span class="count-numbers">@Model.LastMonthTF</span>
-                <div style="padding-left: 45px;">
-                    <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastMonthTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastMonthTFAes</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastMonthTotalCheck</span></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @*<div class="row">
+                @*<div class="row">
             <div class="col-md-12">
                 <div id="chart_div"></div>
             </div>
@@ -62,46 +65,52 @@
 
 
 
-    <div style="height:1700px" class="row">
-        <div class="col-md-12">
-            <div style="overflow:scroll" id="myDiv" class="x_panel">
-                <div class="x_title">
-                    <h2>Faults Summary <small>Daily report</small></h2>
-                    <div class="filter">
-                        <button style="float:right" class="btn btn-warning" id="theButton"><i class="fa fa-expand"></i></button>
-                        <div id="" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px;">
-                            <input id="txtFilterDate" asp-for="Date" class="form-control form-control-sm" />
+                <div style="height:1700px" class="row">
+                    <div class="col-md-12">
+                        <div style="overflow:scroll" id="myDiv" class="x_panel">
+                            <div class="x_title">
+                                <h2>Faults Summary <small>Daily report</small></h2>
+                                <div class="filter">
+                                    <button style="float:right" class="btn btn-warning" id="theButton"><i class="fa fa-expand"></i></button>
+                                    <div id="" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px;">
+                                        <input id="txtFilterDate" asp-for="Date" class="form-control form-control-sm" />
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="myChart" class="chart--container"></div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="myChart2" class="chart--container"></div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="pieChart" class="chart--container"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div id="pieChart2" class="chart--container"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
                 </div>
-                <div class="x_content">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="myChart" class="chart--container"></div>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="myChart2" class="chart--container"></div>
-                        </div>
-                        
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div id="pieChart" class="chart--container"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div id="pieChart2" class="chart--container"></div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
-
 </div>
+<!-- top tiles -->
+
+
 @section scripts{
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="~/ZingChart/zingchart.min.js"></script>

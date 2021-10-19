@@ -1,135 +1,141 @@
 ﻿@model WebAppEs.ViewModel.FaultsEntry.MobileRNDFaultsEntryViewModel
 @{ ViewData["Title"] = "Preview"; }
 
-<div>
-    <div class="card-body">
-        <div class="row">
-            <div style=" padding: 8px;" class="col-md-5">
-                <div style="padding: 8px;" class="shadow-lg bg-white rounded">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">Date</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.DateString</span>
+<div class="x_panel">
+    <div class="container">
+        <div>
+            <div class="card-body">
+                <div class="row">
+                    <div style=" padding: 8px;" class="col-md-5">
+                        <div style="padding: 8px;" class="shadow-lg bg-white rounded">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Date</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.DateString</span>
+                                </div>
+                            </div>
+                            <hr class="solid" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Line</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Line</span>
+                                </div>
+                            </div>
+                            <hr class="solid" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Model</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.ModelName</span>
+                                </div>
+                            </div>
+                            <hr class="solid" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Order</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.LotNo</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <hr class="solid" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">Line</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Line</span>
+                    <div style=" padding: 8px;" class="col-md-2 ">
+                        <div style="padding: 8px;height:100%; text-align:center" class="shadow-lg bg-white rounded">
+                            <h5 class="card-title text-uppercase text-muted mb-0">Total Production</h5>
+                            <br />
+                            <span style="padding-top:13px; color:darkblue" class="h4 font-weight-bold mb-0">@Model.TotalCheckedQty</span>
                         </div>
                     </div>
-                    <hr class="solid" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">Model</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.ModelName</span>
-                        </div>
-                    </div>
-                    <hr class="solid" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">Order</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.LotNo</span>
+                    <div style=" padding: 8px;" class="col-md-5 ">
+                        <div style="padding: 8px;" class="shadow-lg bg-white rounded">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Shipment</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Shipment</span>
+                                </div>
+                            </div>
+                            <hr class="solid" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Shift</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Shift</span>
+                                </div>
+                            </div>
+                            <hr class="solid" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Type of Prod.</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.TypeOfProduction</span>
+                                </div>
+                            </div>
+                            <hr class="solid" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">QC PASS</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.QCPass</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div style=" padding: 8px;" class="col-md-2 ">
-                <div style="padding: 8px;height:100%; text-align:center" class="shadow-lg bg-white rounded">
-                    <h5 class="card-title text-uppercase text-muted mb-0">Total Production</h5>
-                    <br />
-                    <span style="padding-top:13px; color:darkblue" class="h4 font-weight-bold mb-0">@Model.TotalCheckedQty</span>
-                </div>
-            </div>
-            <div style=" padding: 8px;" class="col-md-5 ">
-                <div style="padding: 8px;" class="shadow-lg bg-white rounded">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">Shipment</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Shipment</span>
-                        </div>
-                    </div>
-                    <hr class="solid" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">Shift</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.Shift</span>
-                        </div>
-                    </div>
-                    <hr class="solid" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">Type of Prod.</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.TypeOfProduction</span>
-                        </div>
-                    </div>
-                    <hr class="solid" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="card-title text-uppercase text-muted mb-0">QC PASS</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <span style=" color: black;" class="h6 font-weight-bold mb-0">@Model.QCPass</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="bg-white shadow-lg rounded" style="padding: 10px; width: 60%; margin: auto;">
+                <h5>Category And Sub Category wise Data Preview</h5>
+                <table>
+                    @*<thead>
+                        <tr>
+                            <th>Category Name</th>
+                            <th>Fault Type</th>
+                            <th>Sub Category</th>
+                            <th>Fault Quantity</th>
+                        </tr>
+                    </thead>*@
+                    @foreach (var plan in Model.MobileRNDFaultDetailsViewModel.GroupBy(p => new { p.CategoryName }))
+                    {
+                        <tr class="cat">
+                            <th style="" colspan="2">@plan.Key.CategoryName</th>
+
+                        </tr>
+                        @foreach (var plan1 in plan.GroupBy(p => new { p.FaultType }))
+                        {
+                            <tr class="grp">
+                                <th style="" colspan="2">@plan1.Key.FaultType</th>
+                            </tr>
+                            <tbody>
+                                @foreach (var plan2 in plan1)
+                                {
+                                    <tr>
+
+                                        <td>@plan2.SubCategoryName</td>
+                                        <td>@plan2.FaultQty</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        }
+                    }
+                </table>
             </div>
         </div>
-    </div>
-    <div  class="bg-white shadow-lg rounded" style="padding: 10px; width: 60%; margin: auto;">
-        <h5>Category And Sub Category wise Data Preview</h5>
-        <table>
-        @*<thead>
-            <tr>
-                <th>Category Name</th>
-                <th>Fault Type</th>
-                <th>Sub Category</th>
-                <th>Fault Quantity</th>
-            </tr>
-        </thead>*@
-        @foreach (var plan in Model.MobileRNDFaultDetailsViewModel.GroupBy(p => new { p.CategoryName }))
-        {
-        <tr class="cat">
-            <th style="" colspan="2">@plan.Key.CategoryName</th>
-
-        </tr>
-        @foreach (var plan1 in plan.GroupBy(p => new { p.FaultType }))
-        {
-        <tr class="grp">
-            <th style="" colspan="2">@plan1.Key.FaultType</th>
-        </tr>
-        <tbody>
-            @foreach (var plan2 in plan1)
-                { 
-            <tr>
-                
-                <td>@plan2.SubCategoryName</td>
-                <td>@plan2.FaultQty</td>
-            </tr>
-                }
-            
-        </tbody>
-    }
-        }
-    </table>
+        <br /><br /><br /><br />
     </div>
 </div>
-<br /><br /><br /><br />
+
+
 
 
 

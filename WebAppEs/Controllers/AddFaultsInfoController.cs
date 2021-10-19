@@ -68,7 +68,6 @@ namespace WebAppEs.Controllers
             {
                 MobileRNDFaultsEntryViewModel viewmodel = new MobileRNDFaultsEntryViewModel();
                 List<MRNDQC_SubCategoryVM> sub = new List<MRNDQC_SubCategoryVM>();
-
                 var data = _dataAccessService.GetAllFaultsList(employeeID);
                 var category = _setupService.GetAllCategoryList();
                 var subCategory = _setupService.GetSubCatList();

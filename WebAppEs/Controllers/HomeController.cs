@@ -88,7 +88,5 @@ namespace WebAppEs.Controllers
 
 			return Json(dashboard);
 		}
-
-
 	}
 }

@@ -21,6 +21,7 @@
     <Content Include="wwwroot\vendors\parsleyjs\bower_components\uwidget\uwidget.css" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Aspose.Words" Version="21.10.0" />
     <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.15" />
@@ -32,7 +33,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="sautinsoft.document" Version="5.3.6.22" />
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\vendors\bootstrap\.github\CODEOWNERS" />
@@ -203,6 +206,9 @@
     <None Include="wwwroot\vendors\parsleyjs\bower_components\uwidget\LICENSE" />
     <None Include="wwwroot\vendors\parsleyjs\bower_components\uwidget\uwidget.js" />
     <None Include="wwwroot\vendors\parsleyjs\bower_components\uwidget\uwidget.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>
