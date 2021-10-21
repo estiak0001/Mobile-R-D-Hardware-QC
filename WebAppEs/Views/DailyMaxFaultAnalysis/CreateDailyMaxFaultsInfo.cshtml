@@ -86,7 +86,7 @@
                                 <label>Date</label>
 
                                 @*<input asp-for="Date" class="form-control form-control-sm">
-            <span asp-validation-for="Date" class="text-danger"></span>*@
+                                <span asp-validation-for="Date" class="text-danger"></span>*@
                                 @if (Model.ButtonText == "Update")
                                 {
                                     <input id="txtDate" disabled asp-for="Date" class="form-control" /> }
@@ -137,6 +137,9 @@
                     </div>
                 </div>
             </form>
+            <div class="wrapper shadow-lg bg-white rounded" style="padding: 0px; border-radius: 6px; " id="LoadedSortData">
+
+            </div>
         </div>
     </div>
 </div>
@@ -185,7 +188,7 @@
                     </div>
                 </div>
             </div>
-            <div id="faultsItem">
+            <div  id="faultsItem">
 
             </div>
         </form>
@@ -379,7 +382,9 @@
             });
         });
         $(document).ready(function () {
+            $('#LoadedSortData').html('Select filter dropdown to preview...');
             var faultsItem = [];
+            var LoadedSortData = [];
             var LoadDataForEidit = @Json.Serialize(Model.MobileRNDFaultDetailsViewModel);
             if (LoadDataForEidit != null) {
                 if (LoadDataForEidit.length != 0) {
@@ -544,152 +549,97 @@
                 }
             });
 
-            //$('#ddlLot').on('change', function () {
-            //    //alert($('#ddlLine').val().trim());
-
-            //    if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '') {
-            //        alert("Please Select Line and Model First");
-            //        $('#ddlLot').val("");
-            //    }
-            //    else {
-            //        DropDownChangeData();
-            //    }
-            //});
-            //$('#ddlModel').on('change', function () {
-            //    if ($('#ddlLine').val().trim() == '') {
-            //        alert("Please Select Line First!");
-            //        $('#ddlModel').val("");
-            //    }
-            //    else if ($('#ddlLine').val().trim() != '' && $('#ddlLot').val().trim() == '')
-            //    {
-
-            //    }
-            //    else {
-            //        DropDownChangeData();
-            //    }
-            //});
-            //$('#ddlLine').on('change', function () {
-            //    //alert($('#ddlLine').val().trim());
-
-            //    if ($('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
-            //        //alert("Please Select Line and Model First");
-            //        //$('#ddlLot').val("");
-            //        ////alert($('#txtDate').val().trim());
-            //    }
-            //    else {
-            //        DropDownChangeData();
-            //    }
-            //});
-            //$('#txtDate').on('change', function () {
-
-            //    if ($('#ddlLine').val().trim() == '' || $('#ddlModel').val().trim() == '' || $('#ddlLot').val().trim() == '') {
-
-            //    }
-            //    else {
-            //        DropDownChangeData();
-            //    }
-            //});
-
+            $('#txtDate, #ddlModel, #ddlCategory, #ddlFaultType, #ddlSubCategory').on('change', function () {
+                DropDownChangeData();
+            });
+            
             function DropDownChangeData() {
+                var date = null;
+                var ModelID = null;
+                var categoryID = null;
+                var faulttype = null;
+                var SubCategoryID = null;
+
+                if ($('#txtDate').val().trim() != "") {
+                    date = $('#txtDate').val().trim();
+                }
+                if ($('#ddlModel').val().trim() != "") {
+                    ModelID = $('#ddlModel').val().trim();
+                }
+                if ($('#ddlCategory').val().trim() != "") {
+                    categoryID = $('#ddlCategory').val().trim();
+                }
+                if ($('#ddlFaultType').val().trim() != "") {
+                    faulttype = $('#ddlFaultType').val().trim();
+                }
+                if ($('#ddlSubCategory').val().trim() != "") {
+                    SubCategoryID = $('#ddlSubCategory').val().trim();
+                }
                 var data = {
-                        Date: $('#txtDate').val().trim(),
-                        LineNo: $('#ddlLine').val().trim(),
-                        PartsModelID: $('#ddlModel').val().trim(),
-                        LotNo: $('#ddlLot').val().trim(),
-                    }
+                    Date: date,
+                    ModelID: ModelID,
+                    CategoryID: categoryID,
+                    FaultType: faulttype,
+                    SubCategoryID: SubCategoryID,
+                }
+                console.log(data);
                     $.ajax({
                         data: data,
-                        url: '@Url.Action("LoadFullSetData", "AddFaultsInfo")',
+                        url: '@Url.Action("LoadFaultsData", "DailyMaxFaultAnalysis")',
                         type: 'GET',
                         dataType: "JSON",
                         contentType: "application/json",
                         success: function (result) {
                             if (result != null) {
-                                faultsItem = [];
-                                //hidden Id for Update
-                                $('#txtHiddenID').val(result.id);
-
-                                $('#txtTotalCheckQty').val(result.totalCheckedQty)
-                                //Functional Data
-                                $('#txtTotalFunctional').text(result.totalFunctionalFault);
-                                $('#txtMaterialFaultFun').val(result.funcMaterialFault);
-                                $('#txtProductionFaultFun').val(result.funcProductionFault);
-                                $('#txtSoftwareFaultFun').val(result.funcSoftwareFault);
-
-                                //Aesthetic Data
-                                $('#textTotalAesthetic').text(result.totalAestheticFault);
-                                $('#txtMaterialFaultAes').val(result.aesthMaterialFault);
-                                $('#txtProductionFaultAes').val(result.aesthProductionFault);
-
-                                //button text
-                                $('#btnSubmit').text('Update');
-
+                                LoadedSortData = [];
                                 console.log(result);
 
-                                for (var h = 0; h < result.mobileRNDFaultDetailsViewModel.length; h++) {
-                                    faultsItem.push({
-                                        FaultType: result.mobileRNDFaultDetailsViewModel[h].faultType,
-                                        FaultQty: result.mobileRNDFaultDetailsViewModel[h].faultQty,
-                                        RootCause: result.mobileRNDFaultDetailsViewModel[h].rootCause,
-                                        Solution: result.mobileRNDFaultDetailsViewModel[h].solution,
-                                        Remarks: result.mobileRNDFaultDetailsViewModel[h].remarks,
+                                for (var h = 0; h < result.length; h++) {
+                                    LoadedSortData.push({
+                                        Model: result[h].model,
+                                        Category: result[h].categoryName,
+                                        FaultType: result[h].faultType,
+                                        SubCategory: result[h].subCategoryName,
+                                        Quantity: result[h].faultQty,
                                     });
                                 }
-                                if (result.mobileRNDFaultDetailsViewModel.length != 0) {
-                                    GeneratedItemsTable();
-                                    $('#submit').text('Update');
+                                if (result.length != 0) {
+                                    GeneratedItemsTable1();
+                                    //$('#submit').text('Update');
+                                }
+                                else {
+                                    GeneratedItemsTable1();
                                 }
                                 console.log(faultsItem);
                             }
                             else {
-                                $('#txtHiddenID').val("00000000-0000-0000-0000-000000000000");
-                                $('#txtTotalCheckQty').val("")
-                                $('#txtTotalFunctional').text("0");
-                                $('#txtMaterialFaultFun').val("");
-                                $('#txtProductionFaultFun').val("");
-                                $('#txtSoftwareFaultFun').val("");
-
-                                $('#textTotalAesthetic').text('0');
-                                $('#txtMaterialFaultAes').val("");
-                                $('#txtProductionFaultAes').val("");
-
-                                faultsItem = [];
-                                GeneratedItemsTable();
-
-                                $('#btnSubmit').text('Submit');
-                                $('#submit').text('Submit')
+                                
                             }
 
                         }
                     });
             }
             //function for show added items in table
-            function GeneratedItemsTable() {
-                if (faultsItem.length > 0) {
-                    var $table = $('<table id="datatable-fixed-header" class="table table-sm table-striped table-bordered" style="width:100%"/>');
-                    $table.append('<thead style = "background-color: #323232; color: white;"><tr><th>Category</th><th>Fault Type</th><th>Sub Category</th><th>Quantity</th><th></th></tr></thead>');
+            function GeneratedItemsTable1() {
+                if (LoadedSortData.length > 0) {
+                    var $table = $('<table id="header-fixed" border="0" cellpadding="0" cellspacing="0" class="scroll" style="width: 100%;"/>');
+                    $table.append('<thead style = "background-color: #73879c; color: white;"><tr><th>Model</th><th>Category</th><th>Fault Type</th><th>Sub Category</th><th>Quantity</th></tr></thead>');
                     var $tbody = $('<tbody/>');
-                    $.each(faultsItem, function (i, val) {
+                    $.each(LoadedSortData, function (i, val) {
                         var $row = $('<tr/>');
-                        $row.append($('<td/>').html(val.CategoryName));
-                        $row.append($('<td/>').html(val.FaultTypeName));
-                        $row.append($('<td/>').html(val.SubCategoryName));
-                        $row.append($('<td/>').html(val.FaultQty));
-                        var $remove = $('<a href="#"><i style="font-size: 17px; color:red;" class="fa fa-trash"></i></a>');
-                        $remove.click(function (e) {
-                            e.preventDefault();
-                            faultsItem.splice(i, 1);
-                            GeneratedItemsTable();
-                        });
-                        $row.append($('<td/>').html($remove));
+                        $row.append($('<td/>').html(val.Model));
+                        $row.append($('<td/>').html(val.Category));
+                        $row.append($('<td/>').html(val.FaultType));
+                        $row.append($('<td/>').html(val.SubCategory));
+                        $row.append($('<td/>').html(val.Quantity));
                         $tbody.append($row);
                     });
-                    console.log("current", faultsItem);
+                    console.log("current", LoadedSortData);
                     $table.append($tbody);
-                    $('#faultsItem').html($table);
+                    $('#LoadedSortData').html($table);
                 }
                 else {
-                    $('#faultsItem').html('');
+                    $('#LoadedSortData').html('There is no data to preview...');
                 }
             }
 
@@ -741,7 +691,6 @@
         function RedirectToPage() {
             window.location.href = '@Url.Action("Index", "AddFaultsInfo")';
         }
-
     </script>
 }
 
@@ -868,4 +817,43 @@
         border: 1px solid #32a73e;
         border-radius: 6px;
     }
+
+    /*Scroll Css*/
+
+    div.wrapper {
+        padding: 20px;
+    }
+    table.scroll thead tr:after {
+        content: '';
+        overflow-y: scroll;
+        visibility: hidden;
+    }
+    table.scroll thead th {
+        flex: 1 auto;
+        display: block;
+        color: #fff;
+    }
+    table.scroll tbody {
+        display: block;
+        width: 100%;
+        overflow-y: auto;
+        height: auto;
+        max-height: 200px;
+    }
+        table.scroll thead tr,
+        table.scroll tbody tr {
+            display: flex;
+        }
+
+            table.scroll tbody tr td {
+                flex: 1 auto;
+            }
+
+            table.scroll thead tr th,
+            table.scroll tbody tr td {
+                width: 25%;
+                padding: 5px;
+                border-top: 1px solid rgba(0,0,0,0.3);
+                text-align: center;
+            }
 </style>

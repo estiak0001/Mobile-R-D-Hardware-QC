@@ -110,7 +110,6 @@ namespace WebAppEs.Services
 							   })
 							   .AsNoTracking()
 							   .ToListAsync();
-
 			return items;
 		}
 
@@ -560,9 +559,42 @@ namespace WebAppEs.Services
         public List<AutoCompleteViewModel> FaultsTypeAutoComplete(string Prefix, string type)
         {
 			List<AutoCompleteViewModel> result = new List<AutoCompleteViewModel>();
-			
 				return result;
+		}
+        public List<MobileRNDFaultDetailsViewModel> GetSortedFaultsDetails(DateTime? sortdate, Guid? ModelID, Guid? CategoryID, string FaultType, Guid? SubCategoryID)
+        {
+			var data = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.Date == sortdate)
+						join en in _context.MobileRNDFaultsEntry
+								on new { X1 = fadt.FaultEntryID } equals new { X1 = en.Id }
+								into rmp
+						from entry in rmp.DefaultIfEmpty()
+						join md in _context.MobileRNDPartsModels
+								on new { X1 = entry.PartsModelID } equals new { X1 = md.Id }
+								into mdrmp
+						from model in mdrmp.DefaultIfEmpty()
 
+						join ct in _context.MRNDQC_Category
+								on new { X1 = fadt.CategoryID } equals new { X1 = ct.Id }
+								into ctmdrmp
+						from cat in ctmdrmp.DefaultIfEmpty()
+
+						join sct in _context.MRNDQC_SubCategory
+								on new { X1 = fadt.SubCategoryID } equals new { X1 = sct.Id }
+								into sctmdrmp
+						from subcat in sctmdrmp.DefaultIfEmpty()
+
+						select new MobileRNDFaultDetailsViewModel()
+						{
+							Model = model.ModelName,
+							CategoryName = cat.CategoryName,
+							SubCategoryName = subcat.SubCategoryName,
+							FaultType = subcat.FaultType,
+							FaultQty = fadt.FaultQty,
+							ModelID = entry.PartsModelID,
+							CategoryID = fadt.CategoryID,
+							SubCategoryID = fadt.SubCategoryID
+						}).OrderByDescending(d => d.FaultQty).Where(p=> (ModelID == null || p.ModelID == ModelID) && (CategoryID == null || p.CategoryID == CategoryID) && (FaultType == null || p.FaultType == FaultType) && (SubCategoryID == null || p.SubCategoryID == SubCategoryID)).ToList();
+			return data;
 		}
     }
 }

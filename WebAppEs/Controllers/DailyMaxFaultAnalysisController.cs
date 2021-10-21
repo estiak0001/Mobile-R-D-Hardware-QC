@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WebAppEs.Models;
 using WebAppEs.Services;
 using WebAppEs.ViewModel.Category;
+using WebAppEs.ViewModel.DailyMaxFaultAnalysis;
 using WebAppEs.ViewModel.FaultsEntry;
 
 namespace WebAppEs.Controllers
@@ -44,54 +45,22 @@ namespace WebAppEs.Controllers
         //[Authorize("Authorization")]
         public IActionResult CreateDailyMaxFaultsInfo(Guid Id)
         {
-            //var employeeID = HttpContext.Session.GetString("EmployeeID");
-            //if (employeeID == null)
-            //{
-            //    return RedirectToAction("Logout", "Account");
-            //}
-
             MobileRNDFaultsEntryViewModel viewmodel = new MobileRNDFaultsEntryViewModel();
-            //List<MRNDQC_SubCategoryVM> sub = new List<MRNDQC_SubCategoryVM>();
-            //if (Id == Guid.Empty)
-            //{
-            //    viewmodel.Date = DateTime.Today;
-            //    var category = _setupService.GetAllCategoryList();
-            //    var subCategory = _setupService.GetSubCatList();
-            //    viewmodel.MRNDQC_CategoryVM = category;
-            //    viewmodel.MRNDQC_SubCategoryVM = sub;
-            //    viewmodel.PartsModelViewModel = _dataAccessService.GetAllPartsModelList();
-            //    viewmodel.ButtonText = "Submit";
-            //    return View(viewmodel);
-            //}
-            //else
-            //{
-            //    viewmodel = _dataAccessService.GetFaults(Id);
-            //    var category = _setupService.GetAllCategoryList();
-            //    var subCategory = _setupService.GetSubCatList();
-            //    viewmodel.MRNDQC_CategoryVM = category;
-            //    viewmodel.MRNDQC_SubCategoryVM = sub;
-            //    viewmodel.PartsModelViewModel = _dataAccessService.GetAllPartsModelList();
-            //    viewmodel.MobileRNDFaultDetailsViewModel = _dataAccessService.GetFaultsDetails(Id);
-            //    viewmodel.ButtonText = "Update";
-            //  return View(viewmodel);
-            //}
             List<MRNDQC_SubCategoryVM> sub = new List<MRNDQC_SubCategoryVM>();
-            //viewmodel.Date = DateTime.Today;
             var category = _setupService.GetAllCategoryList();
             var subCategory = _setupService.GetSubCatList();
             viewmodel.MRNDQC_CategoryVM = category;
             viewmodel.MRNDQC_SubCategoryVM = sub;
             viewmodel.PartsModelViewModel = _dataAccessService.GetAllPartsModelList();
             viewmodel.ButtonText = "Submit";
+            viewmodel.Date = DateTime.Today;
             return View(viewmodel);
         }
 
-        [HttpPost]
-        public JsonResult LoadFaultsData([FromBody] MobileRNDFaultsEntryViewModel model)
+        //[HttpPost]
+        public JsonResult LoadFaultsData(ParameterToLoadDataViewModel model)
         {
-            var head = _dataAccessService.GetSortedFaults(model.Date, model.LineNo, model.PartsModelID, model.LotNo, model.Shipment, model.Shift, model.TypeOfProduction);
-            var details = _dataAccessService.GetSortedFaultsDetails(head.Id);
-
+            var details = _dataAccessService.GetSortedFaultsDetails(model.Date, model.ModelID, model.CategoryID, model.FaultType, model.SubCategoryID);
             return Json(details);
         }
     }

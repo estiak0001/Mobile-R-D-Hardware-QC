@@ -24,5 +24,7 @@ namespace WebAppEs.ViewModel.FaultsEntry
 
         public string CategoryName { get; set; }
         public string SubCategoryName { get; set; }
+        public string Model { get; set; }
+        public Guid ModelID { get; set; }
     }
 }
