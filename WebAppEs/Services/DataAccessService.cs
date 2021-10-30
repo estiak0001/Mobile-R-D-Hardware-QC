@@ -13,6 +13,7 @@ using WebAppEs.ViewModel.FaultsEntry;
 using WebAppEs.ViewModel.Home;
 using WebAppEs.ViewModel.Register;
 using WebAppEs.ViewModel.Report;
+using WebAppEs.ViewModel.DailyMaxFaultAnalysis;
 
 namespace WebAppEs.Services
 {
@@ -219,13 +220,32 @@ namespace WebAppEs.Services
             return result>0;
 		}
 
+		public bool AddTopFaultHeadEntry(MRNDHQC_TopFaultHeadVM viewModel)
+		{
+			if (viewModel == null)
+			{
+				return false;
+			}
+			else
+			{
+				_context.MRNDHQC_TopFaultHead.Add(new MRNDHQC_TopFaultHead()
+				{
+					Date = viewModel.Date,
+					EmployeeID = viewModel.EmployeeID,
+					PartsModelID = viewModel.PartsModelID,
+					AnalysisType = viewModel.AnalysisType,
+					LUser = viewModel.LUser
+				});
+			}
+			var result = _context.SaveChanges();
+			return result > 0;
+		}
+
 		public  bool UpdateFaultsEntry(MobileRNDFaultsEntryViewModel viewModel)
 		{
 			var datetimetoday = DateTime.Today;
 			//var existing = null;
 			//			var existing = await _context.MobileRNDFaultsEntry.Where(x => x.Date == DateTime.Today).FirstOrDefaultAsync();
-
-
 			if (viewModel == null)
 			{
 				return false;
@@ -379,7 +399,34 @@ namespace WebAppEs.Services
 			return result>0;
 		}
 
-        public MobileRNDFaultsEntryViewModel GetSortedFaults(DateTime? sortdate, string lineNo, Guid ModelID, string lotNo, string Shipment, string Shift, string TypeOfProduction)
+		public bool AddTopFaultsDetails(MRNDHQC_TopFaultAnalysisVM viewModel)
+		{
+			if (viewModel == null)
+			{
+				return false;
+			}
+			else
+			{
+				_context.MRNDHQC_TopFaultAnalysis.Add(new MRNDHQC_TopFaultAnalysis()
+				{
+					HeadID = viewModel.HeadID,
+					CategoryID = viewModel.CategoryID,
+					SubCategoryID = viewModel.SubCategoryID,
+					Reason = viewModel.Reason,
+					Sample = viewModel.Sample,
+					Remarks = viewModel.Remarks,
+					ProblemSolAndRec = viewModel.ProblemSolAndRec,
+					ImageUrl = viewModel.ImageUrl,
+					UpdatedOn = DateTime.Today,
+					LUser = viewModel.LUser
+				});
+			}
+			var result = _context.SaveChanges();
+
+			return result > 0;
+		}
+
+		public MobileRNDFaultsEntryViewModel GetSortedFaults(DateTime? sortdate, string lineNo, Guid ModelID, string lotNo, string Shipment, string Shift, string TypeOfProduction)
         {
 			var items = (from faults in _context.MobileRNDFaultsEntry.Where(x => x.Date == sortdate && x.LineNo == lineNo && x.PartsModelID == ModelID && x.LotNo == lotNo && x.Shipment == Shipment && x.Shift == Shift && x.TypeOfProduction == TypeOfProduction)
 						 join model in _context.MobileRNDPartsModels
@@ -403,22 +450,8 @@ namespace WebAppEs.Services
 			return items;
 		}
 
-        //public MobileRNDFaultsEntryViewModel GetSortedFaults(DateTime sortdate, int lineNo, string ModelID, string lotNo)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public List<MobileRNDFaultDetails> GetSortedFaultsDetails(Guid Id)
+		public List<MobileRNDFaultDetails> GetSortedFaultsDetails(Guid Id)
         {
-			//var items = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == Id)
-						 
-			//			 select new MobileRNDFaultDetails()
-			//			 {
-			//				 FaultEntryID = fadt.FaultEntryID,
-			//				 EmployeeID = fadt.EmployeeID,
-			//				 Date = fadt.Date,
-							 
-			//			 }).ToList();
 			var items = _context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == Id).ToList();
 			return items;
 		}
@@ -596,5 +629,169 @@ namespace WebAppEs.Services
 						}).OrderByDescending(d => d.FaultQty).Where(p=> (ModelID == null || p.ModelID == ModelID) && (CategoryID == null || p.CategoryID == CategoryID) && (FaultType == null || p.FaultType == FaultType) && (SubCategoryID == null || p.SubCategoryID == SubCategoryID)).ToList();
 			return data;
 		}
-    }
+
+		public List<MRNDHQC_TopFaultAnalysisVM> AllTopFaultModelWise(DateTime? sortdate, Guid ModelID, string AnalysisType)
+		{
+			var items = (from faults in _context.MRNDHQC_TopFaultHead.Where(x => x.Date == sortdate && x.PartsModelID == ModelID && x.AnalysisType == AnalysisType)
+						 join dt in _context.MRNDHQC_TopFaultAnalysis
+							on new { X1 = faults.Id } equals new { X1 = dt.HeadID }
+							into dtrmp
+						 from details in dtrmp.DefaultIfEmpty()
+						 join model in _context.MobileRNDPartsModels
+							on new { X1 = faults.PartsModelID } equals new { X1 = model.Id }
+							into rmp
+						 from rm in rmp.DefaultIfEmpty()
+						 join cat in _context.MRNDQC_Category
+							on new { X1 = details.CategoryID } equals new { X1 = cat.Id }
+							into catrmp
+						 from category in catrmp.DefaultIfEmpty()
+						 join cat in _context.MRNDQC_SubCategory
+							on new { X1 = details.SubCategoryID } equals new { X1 = cat.Id }
+							into subcatrmp
+						 from subcategory in subcatrmp.DefaultIfEmpty()
+
+						 select new MRNDHQC_TopFaultAnalysisVM()
+						 {
+							 Id = details.Id,
+							 AnalysisType = faults.AnalysisType,
+							 Model = rm.ModelName,
+							 PartsModelID = faults.PartsModelID,
+							 Category = category.CategoryName,
+							 CategoryID = details.CategoryID,
+							 SubCategory = subcategory.SubCategoryName,
+							 SubCategoryID = details.SubCategoryID,
+							 ImageUrl = details.ImageUrl,
+							 Quantity = 0,
+							 Reason = details.Reason,
+							 Sample = details.Sample,
+							 Remarks = details.Remarks,
+							 ProblemSolAndRec = details.ProblemSolAndRec
+						 }).ToList();
+			return items;
+		}
+
+		public MRNDHQC_TopFaultHeadVM GetSortedTopFaultsHead(DateTime? sortdate, Guid ModelID, string AnalysisType)
+		{
+			var items = (from faults in _context.MRNDHQC_TopFaultHead.Where(x => x.Date == sortdate && x.PartsModelID == ModelID && x.AnalysisType == AnalysisType)
+						 join model in _context.MobileRNDPartsModels
+							on new { X1 = faults.PartsModelID } equals new { X1 = model.Id }
+							into rmp
+						 from rm in rmp.DefaultIfEmpty()
+						 select new MRNDHQC_TopFaultHeadVM()
+						 {
+							 Id = faults.Id,
+							 EmployeeID = faults.EmployeeID,
+							 Date = faults.Date,
+							 DateString = String.Format("{0:MM/dd/yyyy}", faults.Date),
+							 Model = rm.ModelName,
+							 PartsModelID = faults.PartsModelID,
+							 //Disabled = "disabled"
+						 }).FirstOrDefault();
+			return items;
+		}
+
+		public List<MRNDHQC_TopFaultHeadVM> HeadList()
+		{
+			var items = (from faults in _context.MRNDHQC_TopFaultHead
+						 join model in _context.MobileRNDPartsModels
+							on new { X1 = faults.PartsModelID } equals new { X1 = model.Id }
+							into rmp
+						 from rm in rmp.DefaultIfEmpty()
+						 select new MRNDHQC_TopFaultHeadVM()
+						 {
+							 Id = faults.Id,
+							 EmployeeID = faults.EmployeeID,
+							 Date = faults.Date,
+							 DateString = String.Format("{0:MM/dd/yyyy}", faults.Date),
+							 Model = rm.ModelName,
+							 PartsModelID = faults.PartsModelID,
+							 StatusIsToday = faults.Date == DateTime.Today ? true : false,
+							 AnalysisType = faults.AnalysisType,
+							 //Disabled = "disabled"
+						 }).ToList();
+			return items;
+		}
+
+		public List<MRNDHQC_TopFaultAnalysis> AllDataByHedID(Guid Id)
+		{
+			var items = _context.MRNDHQC_TopFaultAnalysis.Where(x => x.HeadID == Id).ToList();
+			return items;
+		}
+
+
+		public MRNDHQC_TopFaultHeadVM LoadDataHead(Guid Id)
+		{
+			var items = (from faults in _context.MRNDHQC_TopFaultHead.Where(x => x.Id == Id)
+						 join model in _context.MobileRNDPartsModels
+							on new { X1 = faults.PartsModelID } equals new { X1 = model.Id }
+							into rmp
+						 from rm in rmp.DefaultIfEmpty()
+						 select new MRNDHQC_TopFaultHeadVM()
+						 {
+							 Id = faults.Id,
+							 EmployeeID = faults.EmployeeID,
+							 Date = faults.Date,
+							 DateString = String.Format("{0:MM/dd/yyyy}", faults.Date),
+							 Model = rm.ModelName,
+							 PartsModelID = faults.PartsModelID,
+							 AnalysisType = faults.AnalysisType,
+						 }).FirstOrDefault();
+			return items;
+		}
+
+		public bool RemoveTopDetailsByModelWise(List<MRNDHQC_TopFaultAnalysis> Model)
+		{
+			_context.MRNDHQC_TopFaultAnalysis.RemoveRange(Model);
+			var result = _context.SaveChanges();
+
+			if (result == 0)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public List<MRNDHQC_TopFaultAnalysisVM> LoadTopFaultDetailsData(Guid headID)
+		{
+			var items = (from faults in _context.MRNDHQC_TopFaultHead.Where(x => x.Id == headID)
+						 join dt in _context.MRNDHQC_TopFaultAnalysis
+							on new { X1 = faults.Id } equals new { X1 = dt.HeadID }
+							into dtrmp
+						 from details in dtrmp.DefaultIfEmpty()
+						 join model in _context.MobileRNDPartsModels
+							on new { X1 = faults.PartsModelID } equals new { X1 = model.Id }
+							into rmp
+						 from rm in rmp.DefaultIfEmpty()
+						 join cat in _context.MRNDQC_Category
+							on new { X1 = details.CategoryID } equals new { X1 = cat.Id }
+							into catrmp
+						 from category in catrmp.DefaultIfEmpty()
+						 join cat in _context.MRNDQC_SubCategory
+							on new { X1 = details.SubCategoryID } equals new { X1 = cat.Id }
+							into subcatrmp
+						 from subcategory in subcatrmp.DefaultIfEmpty()
+
+						 select new MRNDHQC_TopFaultAnalysisVM()
+						 {
+							 Id = details.Id,
+							 AnalysisType = faults.AnalysisType,
+							 Model = rm.ModelName,
+							 PartsModelID = faults.PartsModelID,
+							 Category = category.CategoryName,
+							 CategoryID = details.CategoryID,
+							 SubCategory = subcategory.SubCategoryName,
+							 SubCategoryID = details.SubCategoryID,
+							 ImageUrl = details.ImageUrl,
+							 Quantity = 0,
+							 Reason = details.Reason,
+							 Sample = details.Sample,
+							 Remarks = details.Remarks,
+							 ProblemSolAndRec = details.ProblemSolAndRec
+						 }).ToList();
+			return items;
+		}
+	}
 }

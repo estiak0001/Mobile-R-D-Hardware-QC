@@ -52,12 +52,12 @@ namespace WebAppEs.Controllers
 			}
 
 			dashboard = _dataAccessService.GetDashboardData(yesterday, lastSevenDayStart, lastMonthDayStart);
-			if (chartdata.Lavel != null)
-			{
-				dashboard.Lavel = chartdata.Lavel;
-				dashboard.FunctionalFaultsPercentageViewModel = chartdata.FunctionalFaultsPercentageViewModel;
-				dashboard.AestheticFaultsPercentageViewModel = chartdata.AestheticFaultsPercentageViewModel;
-			}
+			//if (chartdata.Lavel != null)
+			//{
+			//	dashboard.Lavel = chartdata.Lavel;
+			//	dashboard.FunctionalFaultsPercentageViewModel = chartdata.FunctionalFaultsPercentageViewModel;
+			//	dashboard.AestheticFaultsPercentageViewModel = chartdata.AestheticFaultsPercentageViewModel;
+			//}
 			//li
 			dashboard.Date = LastEntryDate;
 			return View(dashboard);
@@ -79,12 +79,12 @@ namespace WebAppEs.Controllers
 		{
 			DashboasrViewModel dashboard = new DashboasrViewModel();
 			var chartdata = _dataAccessService.GetSingelDayData(Date);
-			if (chartdata.Lavel != null)
-			{
-				dashboard.Lavel = chartdata.Lavel;
-				dashboard.FunctionalFaultsPercentageViewModel = chartdata.FunctionalFaultsPercentageViewModel;
-				dashboard.AestheticFaultsPercentageViewModel = chartdata.AestheticFaultsPercentageViewModel;
-			}
+			//if (chartdata.Lavel != null)
+			//{
+			//	dashboard.Lavel = chartdata.Lavel;
+			//	dashboard.FunctionalFaultsPercentageViewModel = chartdata.FunctionalFaultsPercentageViewModel;
+			//	dashboard.AestheticFaultsPercentageViewModel = chartdata.AestheticFaultsPercentageViewModel;
+			//}
 
 			return Json(dashboard);
 		}

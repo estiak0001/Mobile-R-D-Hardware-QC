@@ -208,6 +208,7 @@
     <None Include="wwwroot\vendors\parsleyjs\bower_components\uwidget\uwidget.less" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\FaultImages\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

@@ -13,63 +13,13 @@
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
-            <div style="display:none" class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="card-counter danger">
-                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Today Total</h2>
-                            <i class="fa fa-code-fork"></i>
-                            <span class="count-numbers">@Model.TodayTF</span>
-                            <div style="padding-left: 45px;">
-                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.TodayTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.TodayTFAes</span>&nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.TodayTotalCheck</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="card-counter primary">
-                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Day Total</h2>
-                            <i class="fa fa-code-fork"></i>
-                            <span class="count-numbers">@Model.LastDayTF</span>
-                            <div style="padding-left: 45px;">
-                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastDayTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastDayTFAes</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastDayTotalCheck</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="card-counter success">
-                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Week Total</h2>
-                            <i class="fa fa-code-fork"></i>
-                            <span class="count-numbers">@Model.LastWeekTF</span>
-                            <div style="padding-left: 45px;">
-                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastWeekTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastWeekTFAes</span>&nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastWeekTotalCheck</span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div style="background-color: #137b89;" class="card-counter info">
-                            <h2 style="position: absolute; display: block; color: white; padding-left: 45px;">Last Month Total</h2>
-                            <i class="fa fa-code-fork"></i>
-                            <span class="count-numbers">@Model.LastMonthTF</span>
-                            <div style="padding-left: 45px;">
-                                <span class="count-name"><span style="color: bisque;">Functional: </span><span style="font-size:18px">@Model.LastMonthTFFunc</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Aesthetic: </span><span style="font-size:18px">@Model.LastMonthTFAes</span> &nbsp;&nbsp;&nbsp; <span style="color: bisque;">Total Check: </span><span style="font-size:18px">@Model.LastMonthTotalCheck</span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                @*<div class="row">
-            <div class="col-md-12">
-                <div id="chart_div"></div>
-            </div>
-        </div>*@
-
-
-
+            <div style="" class="container">
+                
                 <div style="height:1700px" class="row">
                     <div class="col-md-12">
                         <div style="overflow:scroll" id="myDiv" class="x_panel">
                             <div class="x_title">
-                                <h2>Faults Summary <small>Daily report</small></h2>
+                                <h2>Daily report</small></h2>
                                 <div class="filter">
                                     <button style="float:right" class="btn btn-warning" id="theButton"><i class="fa fa-expand"></i></button>
                                     <div id="" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px;">
@@ -79,6 +29,42 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="x_content">
+                                <div style="padding:10px" class="row shadow-lg bg-white rounded">
+                                    <table  class="table table-sm table-striped table-bordered center">
+                                        <thead style="background-color: #323232; color: wheat;">
+                                            <tr style="text-align:center">
+                                                <th>Line</th>
+                                                <th>Model</th>
+                                                <th>Functional Fault(%)</th>
+                                                <th>Aesthetic Fault(%)</th>
+                                                <th>Total Fault(%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="text-align:center">
+                                                <th scope="row">Line 1</th>
+                                                <td>MH22</td>
+                                                <td>6.15</td>
+                                                <td>6.15</td>
+                                                <td>6.15</td>
+                                            </tr>
+                                            <tr style="text-align:center"> 
+                                                <th scope="row">Line 2</th>
+                                                <td>MH22</td>
+                                                <td>6.15</td>
+                                                <td>6.15</td>
+                                                <td>6.15</td>
+                                            </tr>
+                                            <tr style="text-align:center">
+                                                <th scope="row">Line 3</th>
+                                                <td>MH22</td>
+                                                <td>6.15</td>
+                                                <td>6.15</td>
+                                                <td>6.15</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div id="myChart" class="chart--container"></div>
@@ -98,6 +84,30 @@
                                     <div class="col-md-6">
                                         <div id="pieChart2" class="chart--container"></div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Bar graph <small>Sessions</small></h2>
+                                    <ul class="nav navbar-right panel_toolbox">
+                                        <li>
+                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#">Settings 1</a>
+                                                <a class="dropdown-item" href="#">Settings 2</a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a class="close-link"><i class="fa fa-close"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <canvas id="mybarChart"></canvas>
                                 </div>
                             </div>
                         </div>

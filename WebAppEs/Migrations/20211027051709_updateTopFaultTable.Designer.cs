@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAppEs.Data;
 
 namespace WebAppEs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211027051709_updateTopFaultTable")]
+    partial class updateTopFaultTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,6 +217,11 @@ namespace WebAppEs.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AnalysisType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<Guid>("CategoryID")
                         .HasColumnType("uniqueidentifier")
                         .HasMaxLength(150);
@@ -222,8 +229,15 @@ namespace WebAppEs.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("HeadID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime?>("Date")
+                        .IsRequired()
+                        .HasColumnType("datetime2")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("EmployeeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -232,6 +246,10 @@ namespace WebAppEs.Migrations
 
                     b.Property<Guid>("LUser")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PartsModelID")
+                        .HasColumnType("uniqueidentifier")
+                        .HasMaxLength(50);
 
                     b.Property<string>("ProblemSolAndRec")
                         .IsRequired()
@@ -262,48 +280,7 @@ namespace WebAppEs.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HeadID");
-
                     b.ToTable("MRNDHQC_TopFaultAnalysis");
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MRNDHQC_TopFaultHead", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AnalysisType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Date")
-                        .IsRequired()
-                        .HasColumnType("datetime2")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("EmployeeID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<Guid>("LUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PartsModelID")
-                        .HasColumnType("uniqueidentifier")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MRNDHQC_TopFaultHead");
                 });
 
             modelBuilder.Entity("WebAppEs.Entity.MRNDQC_Category", b =>
@@ -641,15 +618,6 @@ namespace WebAppEs.Migrations
                     b.HasOne("WebAppEs.Data.NavigationMenu", "NavigationMenu")
                         .WithMany()
                         .HasForeignKey("NavigationMenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MRNDHQC_TopFaultAnalysis", b =>
-                {
-                    b.HasOne("WebAppEs.Entity.MRNDHQC_TopFaultHead", "MRNDHQC_TopFaultHead")
-                        .WithMany()
-                        .HasForeignKey("HeadID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

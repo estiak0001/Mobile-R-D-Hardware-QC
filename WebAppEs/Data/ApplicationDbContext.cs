@@ -20,7 +20,8 @@ namespace WebAppEs.Data
 		public DbSet<MobileRNDFaultDetails> MobileRNDFaultDetails { get; set; }
 		public DbSet<MRNDQC_Category> MRNDQC_Category { get; set; }
 		public DbSet<MRNDQC_SubCategory> MRNDQC_SubCategory { get; set; }
-		
+		public DbSet<MRNDHQC_TopFaultHead> MRNDHQC_TopFaultHead { get; set; }
+		public DbSet<MRNDHQC_TopFaultAnalysis> MRNDHQC_TopFaultAnalysis { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
@@ -38,7 +39,6 @@ namespace WebAppEs.Data
 
 			builder.Entity<RoleMenuPermission>()
 			.HasKey(c => new { c.RoleId, c.NavigationMenuId});
-			
 
 			base.OnModelCreating(builder);
 		}

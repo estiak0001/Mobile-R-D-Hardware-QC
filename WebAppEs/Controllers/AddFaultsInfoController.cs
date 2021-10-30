@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WebAppEs.Entity;
@@ -23,11 +26,12 @@ namespace WebAppEs.Controllers
         private readonly IDataAccessService _dataAccessService;
         private readonly ILogger<AdminController> _logger;
         private readonly ISetupService _setupService;
-
+        private readonly IWebHostEnvironment _hostEnvironment;
         public AddFaultsInfoController(
                 UserManager<ApplicationUser> userManager,
                 RoleManager<IdentityRole> roleManager,
                 IDataAccessService dataAccessService,
+                IWebHostEnvironment hostEnvironment,
                 ISetupService setupService,
         ILogger<AdminController> logger)
         {
@@ -36,6 +40,7 @@ namespace WebAppEs.Controllers
             _dataAccessService = dataAccessService;
             _logger = logger;
             _setupService = setupService;
+            _hostEnvironment = hostEnvironment;
         }
 
         [Authorize("Authorization")]
@@ -340,5 +345,7 @@ namespace WebAppEs.Controllers
 
             return Json(result);
         }
+
+        
     }
 }

@@ -9,6 +9,7 @@ using WebAppEs.Entity;
 using WebAppEs.ViewModel.Home;
 using WebAppEs.ViewModel.Register;
 using WebAppEs.ViewModel.Report;
+using WebAppEs.ViewModel.DailyMaxFaultAnalysis;
 
 namespace WebAppEs.Services
 {
@@ -58,5 +59,16 @@ namespace WebAppEs.Services
 
 		List<AutoCompleteViewModel> FaultsTypeAutoComplete(string Prefix, string type);
 
+		//Top Fault 
+
+		MRNDHQC_TopFaultHeadVM GetSortedTopFaultsHead(DateTime? sortdate, Guid ModelID, string AnalysisType);
+		bool AddTopFaultsDetails(MRNDHQC_TopFaultAnalysisVM viewModel);
+		bool AddTopFaultHeadEntry(MRNDHQC_TopFaultHeadVM viewModel);
+		List<MRNDHQC_TopFaultAnalysisVM> AllTopFaultModelWise(DateTime? sortdate, Guid ModelID, string AnalysisType);
+		List<MRNDHQC_TopFaultHeadVM> HeadList();
+		List<MRNDHQC_TopFaultAnalysis> AllDataByHedID(Guid Id);
+		bool RemoveTopDetailsByModelWise(List<MRNDHQC_TopFaultAnalysis> Model);
+		MRNDHQC_TopFaultHeadVM LoadDataHead(Guid Id);
+		List<MRNDHQC_TopFaultAnalysisVM> LoadTopFaultDetailsData(Guid headID);
 	}
 }
