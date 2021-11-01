@@ -208,13 +208,13 @@ namespace WebAppEs.Services
 					LineNo = viewModel.LineNo,
 					PartsModelID = viewModel.PartsModelID,
 					LotNo = viewModel.LotNo,
-					TotalCheckedQty = viewModel.TotalCheckedQty,
+					TotalIssueQty = viewModel.TotalIssueQty,
 					Shipment = viewModel.Shipment,
 					Shift = viewModel.Shift,
 					TypeOfProduction = viewModel.TypeOfProduction,
 					QCPass = viewModel.QCPass,
 					LUser = viewModel.UserID
-				}) ;
+				});
             }
             var result =  _context.SaveChanges();
             return result>0;
@@ -260,8 +260,13 @@ namespace WebAppEs.Services
 					LineNo = viewModel.LineNo,
 					PartsModelID = viewModel.PartsModelID,
 					LotNo = viewModel.LotNo,
-					TotalCheckedQty = viewModel.TotalCheckedQty,
-					
+					Shipment = viewModel.Shipment,
+					TypeOfProduction = viewModel.TypeOfProduction,
+					QCPass = viewModel.QCPass,
+					UpdatedOn = DateTime.Today,
+					LUser = viewModel.UserID,
+					Shift = viewModel.Shift,
+					TotalIssueQty = viewModel.TotalIssueQty,
 				});
 			}
 			var result =  _context.SaveChanges();
@@ -288,7 +293,7 @@ namespace WebAppEs.Services
 							 Line = "Line " + faults.LineNo,
 							 ModelName = rm.ModelName,
 							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
-							 TotalCheckedQty = faults.TotalCheckedQty,
+							 TotalIssueQty = faults.TotalIssueQty,
 							 Shipment = faults.Shipment,
 							 Shift = faults.Shift,
 							 TypeOfProduction = faults.TypeOfProduction,
@@ -336,12 +341,12 @@ namespace WebAppEs.Services
 							  ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
 							  PartsModelID = faults.PartsModelID,
 							  LotNo = faults.LotNo,
-							  TotalCheckedQty = faults.TotalCheckedQty,
+							  TotalIssueQty = faults.TotalIssueQty,
 
 							  CreateDate = faults.CreatedOn,
 							  LineNo = faults.LineNo,
 							  StatusIsToday = faults.Date == DateTime.Today ? true : false
-						  }).Distinct().OrderBy(d => d.Date).ThenByDescending(x => x.TotalCheckedQty).Where(s => ((startDate == null && toDate == null) || (s.Date >= startDate && s.Date <= toDate)) && (lineNo == "" || s.LineNo == lineNo) && (ModelID == Guid.Empty || s.PartsModelID == ModelID) && (lotNo == "" || s.LotNo == lotNo) && (EmployeeID == "" || s.EmployeeID == EmployeeID)).ToList();
+						  }).Distinct().OrderBy(d => d.Date).ThenByDescending(x => x.TotalIssueQty).Where(s => ((startDate == null && toDate == null) || (s.Date >= startDate && s.Date <= toDate)) && (lineNo == "" || s.LineNo == lineNo) && (ModelID == Guid.Empty || s.PartsModelID == ModelID) && (lotNo == "" || s.LotNo == lotNo) && (EmployeeID == "" || s.EmployeeID == EmployeeID)).ToList();
 			return items;
 		}
 
@@ -366,7 +371,7 @@ namespace WebAppEs.Services
 							 TypeOfProduction = faults.TypeOfProduction,
 							 QCPass = faults.QCPass,
 							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
-							 TotalCheckedQty = faults.TotalCheckedQty,
+							 TotalIssueQty = faults.TotalIssueQty,
 							 PartsModelID = faults.PartsModelID,
 							 Disabled = "disabled",
 							 ModelName = rm.ModelName,
@@ -443,7 +448,7 @@ namespace WebAppEs.Services
 							 LineNo = faults.LineNo,
 							 LotNo = faults.LotNo,
 							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
-							 TotalCheckedQty = faults.TotalCheckedQty,
+							 TotalIssueQty = faults.TotalIssueQty,
 							 PartsModelID = faults.PartsModelID,
 							 Disabled = "disabled"
 						 }).FirstOrDefault();
@@ -523,27 +528,126 @@ namespace WebAppEs.Services
 			return data;
 		}
 
-        public DashboasrViewModel GetSingelDayData(DateTime? Date)
-        {
-			//if(Date == null)
-   //         {
-			//	Date = (DateTime)(from record in _context.MobileRNDFaultsEntry orderby record.Date select record.Date).Last();
-			//}
+		public DashboasrViewModel GetSingelDayData(DateTime? Date)
+		{
+
+			if (Date == null)
+			{
+				Date = (DateTime)(from record in _context.MobileRNDFaultsEntry orderby record.Date select record.Date).Last();
+			}
 
 			DashboasrViewModel data = new DashboasrViewModel();
 			ChartLevelViewModel lavel = new ChartLevelViewModel();
-			FunctionalFaultsPercentageViewModel FuncPercentage = new FunctionalFaultsPercentageViewModel();
+			FaultPercentageForChartWithFunAes percentage = new FaultPercentageForChartWithFunAes();
 
-			AestheticFaultsPercentageViewModel AesPercentage = new AestheticFaultsPercentageViewModel();
+			lavel.LavelName = (from head in _context.MobileRNDFaultsEntry.Where(x => x.Date == Date).OrderBy(x => x.LineNo)
+							   join model in _context.MobileRNDPartsModels
+										  on new { X1 = head.PartsModelID } equals new { X1 = model.Id }
+										  into rmp
+							   from rm in rmp.DefaultIfEmpty()
+							   select ("Line " + head.LineNo + ": " + rm.ModelName)).ToArray();
 
-			
+			percentage.Functional = (from head in _context.MobileRNDFaultsEntry.Where(x => x.Date == Date).OrderBy(x => x.LineNo)
+                              select new
+                              {
+                                  EmployeeID = head.EmployeeID,
+                                  totalFaultsCheck = ((_context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == head.Id).Sum(x => x.FaultQty))+ head.QCPass),
+                                  qcPass = head.QCPass,
+                                  functionalTotalWithoutMinor = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == head.Id)
+                                                                 join cat in _context.MRNDQC_Category
+                                                                        on new { X1 = fadt.CategoryID } equals new { X1 = cat.Id }
+                                                                        into rmp
+                                                                 from catt in rmp.DefaultIfEmpty()
+                                                                 join subcat in _context.MRNDQC_SubCategory
+                                                                        on new { X1 = fadt.SubCategoryID } equals new { X1 = subcat.Id }
+                                                                        into subrmp
+                                                                 from subcatt in subrmp.DefaultIfEmpty()
+                                                                 select new MobileRNDFaultDetailsViewModel()
+                                                                 {
+                                                                     FaultQty = fadt.FaultQty,
+                                                                     FaultType = subcatt.FaultType,
+																	 CategoryName = catt.CategoryName
+                                                                 }).Where(s => s.CategoryName != "Minor" && s.FaultType == "F").Sum(x => x.FaultQty)
 
-			
+                              }).Select(a => Math.Round((a.totalFaultsCheck == 0 ? 0 : ((double)a.functionalTotalWithoutMinor / (double)a.totalFaultsCheck) * 100), 2)).ToArray();
 
+
+			percentage.Aesthetic = (from head in _context.MobileRNDFaultsEntry.Where(x => x.Date == Date).OrderBy(x => x.LineNo)
+									 select new
+									 {
+										 EmployeeID = head.EmployeeID,
+										 totalFaultsCheck = ((_context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == head.Id).Sum(x => x.FaultQty)) + head.QCPass),
+										 qcPass = head.QCPass,
+										 AestheticTotalWithoutMinor = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.FaultEntryID									== head.Id)
+																		join cat in _context.MRNDQC_Category
+																			   on new { X1 = fadt.CategoryID } equals new { X1 = cat.Id }
+																			   into rmp
+																		from catt in rmp.DefaultIfEmpty()
+																		join subcat in _context.MRNDQC_SubCategory
+																			   on new { X1 = fadt.SubCategoryID } equals new { X1 =														subcat.Id }
+																			   into subrmp
+																		from subcatt in subrmp.DefaultIfEmpty()
+																		select new MobileRNDFaultDetailsViewModel()
+																		{
+																			FaultQty = fadt.FaultQty,
+																			FaultType = subcatt.FaultType,
+																			CategoryName = catt.CategoryName
+																		}).Where(s => s.CategoryName != "Minor" && s.FaultType == "A").Sum(x										=> x.FaultQty)
+
+									 }).Select(a => Math.Round((a.totalFaultsCheck == 0 ? 0 : ((double)a.AestheticTotalWithoutMinor / (double)a.totalFaultsCheck) * 100), 2)).ToArray();
+			data.Lavel = lavel;
+			data.FaultPercentageForChartWithFunAes = percentage;
 			return data;
 		}
 
-        public List<EmployeeListVM> GetAllEmployeeList()
+		public double totalCheck(Guid a, int qcpass)
+        {
+			var totalFault = _context.MobileRNDFaultDetails.Where(x => x.Id == a).Sum(x=> x.FaultQty);
+			double totalcheck = ((double)totalFault + (double)qcpass);
+			return totalcheck;
+        }
+
+		public double totalFunc(Guid id)
+		{
+			var Functional = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == id)
+						 join cat in _context.MRNDQC_Category
+								on new { X1 = fadt.CategoryID } equals new { X1 = cat.Id }
+								into rmp
+						 from catt in rmp.DefaultIfEmpty()
+						 join subcat in _context.MRNDQC_SubCategory
+								on new { X1 = fadt.SubCategoryID } equals new { X1 = subcat.Id }
+								into subrmp
+						 from subcatt in subrmp.DefaultIfEmpty()
+						 select new MobileRNDFaultDetailsViewModel()
+						 {
+							 FaultQty = fadt.FaultQty,
+							 FaultType = subcatt.FaultType
+						 }).Where(s => s.FaultType == "F").Sum(x=> x.FaultQty);
+
+			return Functional;
+		}
+
+		public double totalAes(Guid id)
+		{
+			var Functional = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.FaultEntryID == id)
+							  join cat in _context.MRNDQC_Category
+									 on new { X1 = fadt.CategoryID } equals new { X1 = cat.Id }
+									 into rmp
+							  from catt in rmp.DefaultIfEmpty()
+							  join subcat in _context.MRNDQC_SubCategory
+									 on new { X1 = fadt.SubCategoryID } equals new { X1 = subcat.Id }
+									 into subrmp
+							  from subcatt in subrmp.DefaultIfEmpty()
+							  select new MobileRNDFaultDetailsViewModel()
+							  {
+								  FaultQty = fadt.FaultQty,
+								  FaultType = subcatt.FaultType
+							  }).Where(s => s.FaultType == "A").Sum(x => x.FaultQty);
+
+			return Functional;
+		}
+
+		public List<EmployeeListVM> GetAllEmployeeList()
         {
 			var items = (from user in _context.Users
 

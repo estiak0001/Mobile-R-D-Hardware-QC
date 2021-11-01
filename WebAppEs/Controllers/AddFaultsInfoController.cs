@@ -250,20 +250,27 @@ namespace WebAppEs.Controllers
                 }
                 else
                 {
-                    var details = _dataAccessService.GetSortedFaultsDetails(head.Id);
-                    if (details != null)
-                    {
-                        var isDelete = _dataAccessService.RemoveDetails(details);
-                    }
+                    model.Id = head.Id;
+                    model.EmployeeID = head.EmployeeID;
 
-                    foreach (var it in model.MobileRNDFaultDetailsViewModel)
+                    HedSubmit = _dataAccessService.UpdateFaultsEntry(model);
+                    if (HedSubmit)
                     {
-                        it.Date = head.Date;
-                        it.EmployeeID = head.EmployeeID;
-                        it.FaultEntryId = head.Id;
-                        it.UserID = newGuid;
-                        
-                        DetailsSubmit = _dataAccessService.AddFaultsDetails(it);
+                        var details = _dataAccessService.GetSortedFaultsDetails(head.Id);
+                        if (details != null)
+                        {
+                            var isDelete = _dataAccessService.RemoveDetails(details);
+                        }
+
+                        foreach (var it in model.MobileRNDFaultDetailsViewModel)
+                        {
+                            it.Date = head.Date;
+                            it.EmployeeID = head.EmployeeID;
+                            it.FaultEntryId = head.Id;
+                            it.UserID = newGuid;
+
+                            DetailsSubmit = _dataAccessService.AddFaultsDetails(it);
+                        }
                     }
                 }
             }

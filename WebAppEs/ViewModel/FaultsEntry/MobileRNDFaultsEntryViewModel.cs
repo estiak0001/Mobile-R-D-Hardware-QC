@@ -37,7 +37,7 @@ namespace WebAppEs.ViewModel.FaultsEntry
         public string Shift { get; set; }
 
         [Required]
-        public int TotalCheckedQty { get; set; }
+        public int TotalIssueQty { get; set; }
 
         [Required]
         public string TypeOfProduction { get; set; }

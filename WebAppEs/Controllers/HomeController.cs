@@ -33,14 +33,11 @@ namespace WebAppEs.Controllers
 		//[Authorize("Authorization")]
 		public IActionResult Index()
 		{
-			
-			var yesterday = DateTime.Today.AddDays(-1);
-			var lastSevenDayStart =  DateTime.Today.AddDays(-7);
-			var lastMonthDayStart = DateTime.Today.AddDays(-30);
-
 			var LastEntryDate = _dataAccessService.LastDate();
+			string iDate = "2021-10-17 00:00:00.0000000";
+			DateTime oDate = Convert.ToDateTime(iDate);
 
-			var chartdata = _dataAccessService.GetSingelDayData(LastEntryDate);
+			var chartdata = _dataAccessService.GetSingelDayData(oDate);
 
 			DashboasrViewModel dashboard = new DashboasrViewModel();
 			
@@ -51,15 +48,13 @@ namespace WebAppEs.Controllers
 				return RedirectToAction("Logout", "Account");
 			}
 
-			dashboard = _dataAccessService.GetDashboardData(yesterday, lastSevenDayStart, lastMonthDayStart);
-			//if (chartdata.Lavel != null)
-			//{
-			//	dashboard.Lavel = chartdata.Lavel;
-			//	dashboard.FunctionalFaultsPercentageViewModel = chartdata.FunctionalFaultsPercentageViewModel;
-			//	dashboard.AestheticFaultsPercentageViewModel = chartdata.AestheticFaultsPercentageViewModel;
-			//}
-			//li
-			dashboard.Date = LastEntryDate;
+            if (chartdata.Lavel != null)
+            {
+                dashboard.Lavel = chartdata.Lavel;
+                dashboard.FaultPercentageForChartWithFunAes = chartdata.FaultPercentageForChartWithFunAes;
+            }
+            //li
+            dashboard.Date = LastEntryDate;
 			return View(dashboard);
 		}
 		//[Authorize("Authorization")]

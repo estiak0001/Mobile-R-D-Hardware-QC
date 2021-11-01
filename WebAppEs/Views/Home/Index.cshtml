@@ -14,12 +14,12 @@
         </div>
         <div class="x_content">
             <div style="" class="container">
-                
+
                 <div style="height:1700px" class="row">
                     <div class="col-md-12">
                         <div style="overflow:scroll" id="myDiv" class="x_panel">
                             <div class="x_title">
-                                <h2>Daily report</small></h2>
+                                <h2>Daily report</h2>
                                 <div class="filter">
                                     <button style="float:right" class="btn btn-warning" id="theButton"><i class="fa fa-expand"></i></button>
                                     <div id="" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px;">
@@ -30,7 +30,7 @@
                             </div>
                             <div class="x_content">
                                 <div style="padding:10px" class="row shadow-lg bg-white rounded">
-                                    <table  class="table table-sm table-striped table-bordered center">
+                                    <table class="table table-sm table-striped table-bordered center">
                                         <thead style="background-color: #323232; color: wheat;">
                                             <tr style="text-align:center">
                                                 <th>Line</th>
@@ -48,7 +48,7 @@
                                                 <td>6.15</td>
                                                 <td>6.15</td>
                                             </tr>
-                                            <tr style="text-align:center"> 
+                                            <tr style="text-align:center">
                                                 <th scope="row">Line 2</th>
                                                 <td>MH22</td>
                                                 <td>6.15</td>
@@ -65,49 +65,10 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="row">
+                                <div class="row shadow-lg bg-white rounded" style="margin-top:10px">
                                     <div class="col-md-12">
-                                        <div id="myChart" class="chart--container"></div>
+                                        <canvas id="myChart" width="400" height="100"></canvas>
                                     </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div id="myChart2" class="chart--container"></div>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div id="pieChart" class="chart--container"></div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div id="pieChart2" class="chart--container"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="x_panel">
-                                <div class="x_title">
-                                    <h2>Bar graph <small>Sessions</small></h2>
-                                    <ul class="nav navbar-right panel_toolbox">
-                                        <li>
-                                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#">Settings 1</a>
-                                                <a class="dropdown-item" href="#">Settings 2</a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <a class="close-link"><i class="fa fa-close"></i></a>
-                                        </li>
-                                    </ul>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="x_content">
-                                    <canvas id="mybarChart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +85,85 @@
 @section scripts{
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="~/ZingChart/zingchart.min.js"></script>
+    <script>
+        var LoadDataForChartLavel = @Json.Serialize(Model.Lavel.LavelName);
+        var Functional = @Json.Serialize(Model.FaultPercentageForChartWithFunAes.Functional);
+        var Aesthetic = @Json.Serialize(Model.FaultPercentageForChartWithFunAes.Aesthetic);
 
+
+        var Dummy = {
+            labels: ["M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2"],
+            datasets: [
+                {
+                    label: "Functional",
+                    backgroundColor: "#3e95cd",
+                    data: [1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34]
+                }, {
+                    label: "Aesthetic",
+                    backgroundColor: "#8e5ea2",
+                    data: [4.08, 5.47, 6.75, 7.34, 1.33, 1.33, 2.21, 7.83, 2.478, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34]
+                }
+            ]
+        };
+
+        var data = {
+            labels: LoadDataForChartLavel,
+            datasets: [
+                {
+                    label: "Functional",
+                    backgroundColor: "#3e95cd",
+                    data: Functional
+                }, {
+                    label: "Aesthetic",
+                    backgroundColor: "#8e5ea2",
+                    data: Aesthetic
+                }
+            ]
+        };
+
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: {
+                title: {
+                    display: true,
+                    text: 'Line Wise Fault % (10.30.2021)'
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                animation: {
+                    duration: 500,
+                    easing: "easeOutQuart",
+                    onComplete: function () {
+                        var ctx = this.chart.ctx;
+                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+
+                        this.data.datasets.forEach(function (dataset) {
+                            for (var i = 0; i < dataset.data.length; i++) {
+                                var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+                                    scale_max = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._yScale.maxHeight;
+                                ctx.fillStyle = '#444';
+                                var y_pos = model.y - 5;
+                                // Make sure data value does not get overflown and hidden
+                                // when the bar's value is too close to max value of scale
+                                // Note: The y value is reverse, it counts from top down
+                                if ((scale_max - model.y) / scale_max >= 0.93)
+                                    y_pos = model.y + 20;
+                                ctx.fillText(dataset.data[i]+"%", model.x, y_pos);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $('#theButton').click(function () {
@@ -156,7 +195,7 @@
                         element.msRequestFullscreen();
                     }
                 }
-                
+
             });
 
             @*var LoadDataForChartLavel = @Json.Serialize(Model.Lavel.LavelName);
@@ -209,7 +248,7 @@
                 //alert();
                 const myConfig = {
                     fontSize: 2,
-                    
+
                     type: 'bar',
                     title: {
                         text: 'Functional Fault Percentage',
@@ -218,7 +257,7 @@
                     },
                     "plotarea": {
                         "margin": "dynamic",
-                        
+
                     },
                     legend: {
                         draggable: true,
@@ -726,6 +765,7 @@
             display: block;
             font-size: 13px;
         }
+
     #pieChart {
         width: 100%;
         height: 100%;
@@ -755,6 +795,7 @@
         top: 0;
         left: 0;
     }
+
     div[id$="license"] {
         display: none !important;
     }

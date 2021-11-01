@@ -168,9 +168,8 @@
                                 <span class="error">Please select Shift!</span>
                             </div>
                             <div style="text-align: center;" class="col-md-2 col-sm-2  form-group has-feedback">
-                                <label style=" text-align: center; font-weight: 900; color: #0c8120;">Total Production</label>
-                                <input style=" border-color: #0c8120; text-align: center;" onclick="selectAllText(this.id)" asp-for="TotalCheckedQty" type="number" class="form-control" id="txtTotalCheckQty" placeholder="Enter Qty.">
-                                <span class="error">Please enter valid Quantity!</span>
+                                <label style=" text-align: center; font-weight: 900; color: #0c8120;">Issue Qty.</label>
+                                <input style=" border-color: #0c8120; text-align: center;" onclick="selectAllText(this.id)" asp-for="TotalIssueQty" type="number" class="form-control" id="txtIssueQty" placeholder="Enter Qty.">
                             </div>
                             <div style="" class="col-md-3 col-sm-3  form-group has-feedback">
                                 <label style="">Type Of Production</label>
@@ -202,6 +201,21 @@
         <form id="demo-form">
 
             <div style="">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label style="font-size: 22px; font-weight: bolder; border-right: 3px solid #aeaaa5; padding-right: 14px;">Total Production <span class="badge badge-info">0</span></label>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-size: 22px; font-weight: bolder; border-right: 3px solid #aeaaa5; padding-right: 14px;">QC Pass <span class="badge badge-info">0</span></label>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-size: 22px; font-weight: bolder; border-right: 3px solid #aeaaa5; padding-right: 14px;">Minor Pass <span class="badge badge-info">0</span></label>
+                    </div>
+                    <div class="col-md-2">
+                        <label style="font-size: 22px; font-weight: bolder; border-right: 3px solid #aeaaa5; padding-right: 14px;">Fault Frequency <span class="badge badge-info">0</span></label>
+                    </div>
+                </div>
+                <hr />
                 <div class="row">
                     <div class="col-md-3">
                         <label for="ddlCategory">Category* :</label>
@@ -570,12 +584,11 @@
                 }
 
 
-                if (!($('#txtTotalCheckQty').val().trim() != '' && !isNaN($('#txtTotalCheckQty').val().trim()))) {
-                    isValidItem = false;
-                    $('#txtTotalCheckQty').siblings('span.error').css('visibility', 'visible');
+                if (!($('#txtIssueQty').val().trim() != '' && !isNaN($('#txtIssueQty').val().trim()))) {
+                    var issueQty = $('#txtIssueQty').val().trim();
                 }
                 else {
-                    $('#txtTotalCheckQty').siblings('span.error').css('visibility', 'hidden');
+                    issueQty = 0;
                 }
 
                 if ($('#ddTypeOfProduction').val().trim() == '') {
@@ -604,7 +617,7 @@
                         LotNo: $('#ddlLot').val().trim(),
                         Shipment: $('#ddShipment').val().trim(),
                         Shift: $('#ddShift').val().trim(),
-                        TotalCheckedQty: Number($('#txtTotalCheckQty').val().trim()),
+                        TotalIssueQty: Number($('#txtIssueQty').val().trim()),
                         TypeOfProduction: $('#ddTypeOfProduction').val().trim(),
                         QCPass: Number($('#txtQCPass').val().trim()),
                         MobileRNDFaultDetailsViewModel: faultsItem
@@ -695,7 +708,7 @@
                                 //hidden Id for Update
                                 $('#txtHiddenID').val(result.id);
 
-                                $('#txtTotalCheckQty').val(result.totalCheckedQty)
+                                $('#txtIssueQty').val(result.TotalIssueQty)
                                 //Functional Data
                                 $('#txtTotalFunctional').text(result.totalFunctionalFault);
                                 $('#txtMaterialFaultFun').val(result.funcMaterialFault);
@@ -729,7 +742,7 @@
                             }
                             else {
                                 $('#txtHiddenID').val("00000000-0000-0000-0000-000000000000");
-                                $('#txtTotalCheckQty').val("")
+                                $('#txtIssueQty').val("")
                                 $('#txtTotalFunctional').text("0");
                                 $('#txtMaterialFaultFun').val("");
                                 $('#txtProductionFaultFun').val("");

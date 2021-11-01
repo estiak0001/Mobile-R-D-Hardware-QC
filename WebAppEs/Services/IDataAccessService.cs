@@ -44,12 +44,9 @@ namespace WebAppEs.Services
 
 		bool RemoveDetails(List<MobileRNDFaultDetails> Model);
 
-		//Dashboard
-		//DashboasrViewModel GetDashboardData(DateTime YesterdayDate, DateTime LastWeekStart, DateTime LastWeekEnd, DateTime LastMonthStart, DateTime LastMonthEnd);
-		DashboasrViewModel GetDashboardData(DateTime? YesterdayDate, DateTime LastSevenDayStart, DateTime LastMonthDayStart);
+	
 		DashboasrViewModel GetSingelDayData(DateTime? Date);
 		//FunctionalFaultsPercentageViewModel FunctionalFaultsPercentageViewModel(DateTime Date);
-		//AestheticFaultsPercentageViewModel AestheticFaultsPercentageViewModel(DateTime Date);
 
 		//Report
 		List<DetailsReportViewModel> DetailsReportList(DateTime? Date);

@@ -42,7 +42,7 @@ namespace WebAppEs.Entity
 
         [Required]
         [StringLength(50)]
-        public int TotalCheckedQty { get; set; }
+        public int TotalIssueQty { get; set; }
 
         [Required]
         [StringLength(150)]
