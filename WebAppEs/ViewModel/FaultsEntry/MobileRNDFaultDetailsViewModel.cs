@@ -12,6 +12,8 @@ namespace WebAppEs.ViewModel.FaultsEntry
 
         public DateTime? Date { get; set; }
 
+        public string FaultTypeKey { get; set; }
+
         public string FaultType { get; set; }
 
         public int FaultQty { get; set; }

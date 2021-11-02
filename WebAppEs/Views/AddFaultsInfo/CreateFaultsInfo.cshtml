@@ -55,6 +55,7 @@
         height: 20px !important;
         width: 100% !important;
     }
+    
 </style>
 <div class="row">
     <div class="col-md-12">
@@ -69,9 +70,15 @@
             <h2 style="color:black">Fault's Entry</h2>
             <ul class="nav navbar-right panel_toolbox">
                 <li>
+                    <a style=" color: purple; font-weight:bolder; display:none" class="blink_me"> <i style="color:darkorange; font-size:20px" class="fa fa-info-circle"></i> This Parameter's Data Already Exist Please Update to Add More..</a>
+                </li>
+
+                <li>
                     <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                 </li>
+
             </ul>
+            
             <div class="clearfix"></div>
         </div>
         <div style="margin-top:0px" class="x_content">
@@ -448,6 +455,7 @@
             });
         });
         $(document).ready(function () {
+            //blinkMessage();
             var faultsItem = [];
             var LoadDataForEidit = @Json.Serialize(Model.MobileRNDFaultDetailsViewModel);
             if (LoadDataForEidit != null) {
@@ -689,12 +697,19 @@
             //    }
             //});
 
+            $('#txtDate, #ddlLine, #ddlModel, #ddlLot, #ddShipment, #ddShift, #ddTypeOfProduction').on('change', function () {
+                DropDownChangeData();
+            });
+
             function DropDownChangeData() {
                 var data = {
                         Date: $('#txtDate').val().trim(),
                         LineNo: $('#ddlLine').val().trim(),
                         PartsModelID: $('#ddlModel').val().trim(),
                         LotNo: $('#ddlLot').val().trim(),
+                        Shipment: $('#ddShipment').val().trim(),
+                        Shift: $('#ddShift').val().trim(),
+                        TypeOfProduction: $('#ddTypeOfProduction').val().trim()
                     }
                     $.ajax({
                         data: data,
@@ -707,19 +722,10 @@
                                 faultsItem = [];
                                 //hidden Id for Update
                                 $('#txtHiddenID').val(result.id);
-
-                                $('#txtIssueQty').val(result.TotalIssueQty)
-                                //Functional Data
-                                $('#txtTotalFunctional').text(result.totalFunctionalFault);
-                                $('#txtMaterialFaultFun').val(result.funcMaterialFault);
-                                $('#txtProductionFaultFun').val(result.funcProductionFault);
-                                $('#txtSoftwareFaultFun').val(result.funcSoftwareFault);
-
-                                //Aesthetic Data
-                                $('#textTotalAesthetic').text(result.totalAestheticFault);
-                                $('#txtMaterialFaultAes').val(result.aesthMaterialFault);
-                                $('#txtProductionFaultAes').val(result.aesthProductionFault);
-
+                                
+                                $('#txtIssueQty').val(result.totalIssueQty);
+                                $('#txtQCPass').val(result.qcPass);
+                                
                                 //button text
                                 $('#btnSubmit').text('Update');
 
@@ -727,38 +733,32 @@
 
                                 for (var h = 0; h < result.mobileRNDFaultDetailsViewModel.length; h++) {
                                     faultsItem.push({
-                                        FaultType: result.mobileRNDFaultDetailsViewModel[h].faultType,
+                                        CategoryID: result.mobileRNDFaultDetailsViewModel[h].categoryID,
+                                        CategoryName: result.mobileRNDFaultDetailsViewModel[h].categoryName,
+                                        SubCategoryID: result.mobileRNDFaultDetailsViewModel[h].subCategoryID,
+                                        SubCategoryName: result.mobileRNDFaultDetailsViewModel[h].subCategoryName,
+                                        FaultType: result.mobileRNDFaultDetailsViewModel[h].faultTypeKey,
+                                        FaultTypeName: result.mobileRNDFaultDetailsViewModel[h].faultType,
                                         FaultQty: result.mobileRNDFaultDetailsViewModel[h].faultQty,
-                                        RootCause: result.mobileRNDFaultDetailsViewModel[h].rootCause,
-                                        Solution: result.mobileRNDFaultDetailsViewModel[h].solution,
-                                        Remarks: result.mobileRNDFaultDetailsViewModel[h].remarks,
                                     });
                                 }
                                 if (result.mobileRNDFaultDetailsViewModel.length != 0) {
+                                    blinkMessage("start");
                                     GeneratedItemsTable();
                                     $('#submit').text('Update');
                                 }
                                 console.log(faultsItem);
                             }
                             else {
+                                blinkMessage("end");
                                 $('#txtHiddenID').val("00000000-0000-0000-0000-000000000000");
-                                $('#txtIssueQty').val("")
-                                $('#txtTotalFunctional').text("0");
-                                $('#txtMaterialFaultFun').val("");
-                                $('#txtProductionFaultFun').val("");
-                                $('#txtSoftwareFaultFun').val("");
-
-                                $('#textTotalAesthetic').text('0');
-                                $('#txtMaterialFaultAes').val("");
-                                $('#txtProductionFaultAes').val("");
-
+                                $('#txtIssueQty').val("");
+                                $('#txtQCPass').val("");
                                 faultsItem = [];
                                 GeneratedItemsTable();
-
                                 $('#btnSubmit').text('Submit');
                                 $('#submit').text('Submit')
                             }
-
                         }
                     });
             }
@@ -840,7 +840,21 @@
         function RedirectToPage() {
             window.location.href = '@Url.Action("Index", "AddFaultsInfo")';
         }
-
+        function blink_text() {
+            $('.blink_me').fadeOut(1100);
+            $('.blink_me').fadeIn(1000);
+        }
+        var refreshIntervalId;
+        function blinkMessage(startBlink) {
+            if (startBlink === "start") {
+                refreshIntervalId = setInterval(blink_text, 1000);
+            }
+            else {
+                clearInterval(refreshIntervalId);
+                $('.blink_me').hide();
+                $('.blink_me').fadeOut(500);
+            }
+        }
     </script>
 }
 

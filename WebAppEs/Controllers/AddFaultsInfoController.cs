@@ -316,27 +316,27 @@ namespace WebAppEs.Controllers
 
 
 
-        //public JsonResult LoadFullSetData(DateTime Date, string LineNo, Guid PartsModelID, string LotNo, string )
-        //{
-        //    MobileRNDFaultsEntryViewModel data = new MobileRNDFaultsEntryViewModel();
-        //    var head = _dataAccessService.GetSortedFaults(Date, LineNo, PartsModelID, LotNo);
-        //    if(head != null)
-        //    {
-        //        var details = _dataAccessService.GetFaultsDetails(head.Id);
-        //        head.MobileRNDFaultDetailsViewModel = details;
-        //    }
-            
-        //    if(head!=null)
-        //    {
-        //        data = head;
-        //    }
-        //    else
-        //    {
-        //        data = null;
-        //    }
+        public JsonResult LoadFullSetData(DateTime Date, string LineNo, Guid PartsModelID, string LotNo, string Shipment, string Shift, string TypeOfProduction)
+        {
+            MobileRNDFaultsEntryViewModel data = new MobileRNDFaultsEntryViewModel();
+            var head = _dataAccessService.GetSortedFaults(Date, LineNo, PartsModelID, LotNo, Shipment, Shift, TypeOfProduction);
+            if (head != null)
+            {
+                var details = _dataAccessService.GetFaultsDetails(head.Id);
+                head.MobileRNDFaultDetailsViewModel = details;
+            }
 
-        //    return Json(data);
-        //}
+            if (head != null)
+            {
+                data = head;
+            }
+            else
+            {
+                data = null;
+            }
+
+            return Json(data);
+        }
 
         [Authorize("Authorization")]
         public IActionResult Delete(Guid id)

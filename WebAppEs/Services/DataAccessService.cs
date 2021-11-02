@@ -208,11 +208,11 @@ namespace WebAppEs.Services
 					LineNo = viewModel.LineNo,
 					PartsModelID = viewModel.PartsModelID,
 					LotNo = viewModel.LotNo,
-					TotalIssueQty = viewModel.TotalIssueQty,
+					TotalIssueQty = (int)viewModel.TotalIssueQty,
 					Shipment = viewModel.Shipment,
 					Shift = viewModel.Shift,
 					TypeOfProduction = viewModel.TypeOfProduction,
-					QCPass = viewModel.QCPass,
+					QCPass = (int)viewModel.QCPass,
 					LUser = viewModel.UserID
 				});
             }
@@ -262,11 +262,11 @@ namespace WebAppEs.Services
 					LotNo = viewModel.LotNo,
 					Shipment = viewModel.Shipment,
 					TypeOfProduction = viewModel.TypeOfProduction,
-					QCPass = viewModel.QCPass,
+					QCPass = (int)viewModel.QCPass,
 					UpdatedOn = DateTime.Today,
 					LUser = viewModel.UserID,
 					Shift = viewModel.Shift,
-					TotalIssueQty = viewModel.TotalIssueQty,
+					TotalIssueQty = (int)viewModel.TotalIssueQty,
 				});
 			}
 			var result =  _context.SaveChanges();
@@ -450,7 +450,8 @@ namespace WebAppEs.Services
 							 ModelNameWithLot = rm.ModelName + "/" + faults.LotNo + " Order",
 							 TotalIssueQty = faults.TotalIssueQty,
 							 PartsModelID = faults.PartsModelID,
-							 Disabled = "disabled"
+							 Disabled = "disabled",
+							 QCPass = faults.QCPass
 						 }).FirstOrDefault();
 			return items;
 		}
@@ -497,7 +498,8 @@ namespace WebAppEs.Services
 							 CategoryName = catt.CategoryName,
 							 SubCategoryName = subcatt.SubCategoryName,
 							 FaultQty = fadt.FaultQty,
-							 FaultType = subcatt.FaultType == "A" ? "Aesthetic" : "Functional"
+							 FaultType = subcatt.FaultType == "A" ? "Aesthetic" : "Functional",
+							 FaultTypeKey = subcatt.FaultType
                          }).ToList();
 
 			return items;

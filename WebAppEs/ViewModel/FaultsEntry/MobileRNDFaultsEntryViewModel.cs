@@ -37,12 +37,12 @@ namespace WebAppEs.ViewModel.FaultsEntry
         public string Shift { get; set; }
 
         [Required]
-        public int TotalIssueQty { get; set; }
+        public int? TotalIssueQty { get; set; }
 
         [Required]
         public string TypeOfProduction { get; set; }
 
-        public int QCPass { get; set; }
+        public int? QCPass { get; set; }
 
         public IEnumerable<PartsModelViewModel> PartsModelViewModel { get; set; }
         public IEnumerable<MRNDQC_CategoryVM> MRNDQC_CategoryVM { get; set; }
