@@ -49,7 +49,9 @@ namespace WebAppEs.Services
 		//FunctionalFaultsPercentageViewModel FunctionalFaultsPercentageViewModel(DateTime Date);
 
 		//Report
-		List<DetailsReportViewModel> DetailsReportList(DateTime? Date);
+		List<MRNDHQC_TopFaultAnalysisVM> Inline(DateTime? Date);
+		List<MRNDHQC_TopFaultAnalysisVM> Aging(DateTime? Date);
+		List<MRNDHQC_TopFaultAnalysisVM> OQC(DateTime? Date);
 		bool RemoveeNTRY(Guid Id);
 
 		DateTime LastDate();
@@ -61,7 +63,7 @@ namespace WebAppEs.Services
 		MRNDHQC_TopFaultHeadVM GetSortedTopFaultsHead(DateTime? sortdate, Guid ModelID, string AnalysisType);
 		bool AddTopFaultsDetails(MRNDHQC_TopFaultAnalysisVM viewModel);
 		bool AddTopFaultHeadEntry(MRNDHQC_TopFaultHeadVM viewModel);
-		List<MRNDHQC_TopFaultAnalysisVM> AllTopFaultModelWise(DateTime? sortdate, Guid ModelID, string AnalysisType);
+		List<MRNDHQC_TopFaultAnalysisVM> AllTopFaultModelWise(DateTime? sortdate, Guid ModelID, string AnalysisType, string LineNo);
 		List<MRNDHQC_TopFaultHeadVM> HeadList();
 		List<MRNDHQC_TopFaultAnalysis> AllDataByHedID(Guid Id);
 		bool RemoveTopDetailsByModelWise(List<MRNDHQC_TopFaultAnalysis> Model);

@@ -97,13 +97,13 @@
                 <h5>Category And Sub Category wise Data Preview</h5>
                 <table>
                     @*<thead>
-                        <tr>
-                            <th>Category Name</th>
-                            <th>Fault Type</th>
-                            <th>Sub Category</th>
-                            <th>Fault Quantity</th>
-                        </tr>
-                    </thead>*@
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Fault Type</th>
+                        <th>Sub Category</th>
+                        <th>Fault Quantity</th>
+                    </tr>
+                </thead>*@
                     @foreach (var plan in Model.MobileRNDFaultDetailsViewModel.GroupBy(p => new { p.CategoryName }))
                     {
                         <tr class="cat">
@@ -130,6 +130,27 @@
                     }
                 </table>
             </div>
+            @*<table id="Table1" runat="server"
+                   style="border-width: 1px; border-color: Black">
+
+                <tr>
+                    <td owspan="2">
+                        Cell 1.
+                    </td>
+                    <td>
+                        Cell 2.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Cell 1.
+                    </td>
+                    <td>
+                        Cell 2.
+                    </td>
+                </tr>
+
+            </table>*@
         </div>
         <br /><br /><br /><br />
     </div>

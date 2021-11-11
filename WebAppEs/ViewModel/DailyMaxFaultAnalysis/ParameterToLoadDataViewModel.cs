@@ -12,5 +12,6 @@ namespace WebAppEs.ViewModel.DailyMaxFaultAnalysis
         public string FaultType { get; set; }
         public Guid? CategoryID { get; set; }
         public Guid? SubCategoryID { get; set; }
+        public string LineNo { get; set; }
     }
 }

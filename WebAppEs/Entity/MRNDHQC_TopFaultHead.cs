@@ -29,6 +29,10 @@ namespace WebAppEs.Entity
         [StringLength(50)]
         public Guid PartsModelID { get; set; }
 
+        [Required]
+        [StringLength(50)]
+        public string LineNo { get; set; }
+
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }
         public Guid LUser { get; set; }

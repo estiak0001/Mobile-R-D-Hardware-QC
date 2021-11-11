@@ -208,7 +208,7 @@
         <form id="demo-form">
 
             <div style="">
-                <div class="row">
+                <div class="row" style="display:none">
                     <div class="col-md-2">
                         <label style="font-size: 22px; font-weight: bolder; border-right: 3px solid #aeaaa5; padding-right: 14px;">Total Production <span class="badge badge-info">0</span></label>
                     </div>
@@ -356,7 +356,6 @@
                     alert("Select Category First");
                     $('#ddlFaultType').val("");
                 }
-
             });
         });
         function selectAllText(senderId) {
@@ -455,7 +454,6 @@
             });
         });
         $(document).ready(function () {
-            //blinkMessage();
             var faultsItem = [];
             var LoadDataForEidit = @Json.Serialize(Model.MobileRNDFaultDetailsViewModel);
             if (LoadDataForEidit != null) {
@@ -743,14 +741,14 @@
                                     });
                                 }
                                 if (result.mobileRNDFaultDetailsViewModel.length != 0) {
-                                    blinkMessage("start");
+                                    $('.blink_me').show();
                                     GeneratedItemsTable();
                                     $('#submit').text('Update');
                                 }
                                 console.log(faultsItem);
                             }
                             else {
-                                blinkMessage("end");
+                                $('.blink_me').hide();
                                 $('#txtHiddenID').val("00000000-0000-0000-0000-000000000000");
                                 $('#txtIssueQty').val("");
                                 $('#txtQCPass').val("");
@@ -839,21 +837,6 @@
 
         function RedirectToPage() {
             window.location.href = '@Url.Action("Index", "AddFaultsInfo")';
-        }
-        function blink_text() {
-            $('.blink_me').fadeOut(1100);
-            $('.blink_me').fadeIn(1000);
-        }
-        var refreshIntervalId;
-        function blinkMessage(startBlink) {
-            if (startBlink === "start") {
-                refreshIntervalId = setInterval(blink_text, 1000);
-            }
-            else {
-                clearInterval(refreshIntervalId);
-                $('.blink_me').hide();
-                $('.blink_me').fadeOut(500);
-            }
         }
     </script>
 }

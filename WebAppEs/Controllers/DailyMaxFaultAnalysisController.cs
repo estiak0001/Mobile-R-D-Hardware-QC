@@ -92,9 +92,16 @@ namespace WebAppEs.Controllers
             return Json(details);
         }
 
-        public string Upload_File()
+        public class ImageParam
         {
-            string result = string.Empty;
+            public string Name { get; set; }
+            public string Url { get; set; }
+        }
+
+        public ImageParam Upload_File()
+        {
+            ImageParam im = new ImageParam();
+            im.Name = string.Empty;
             try
             {
                 long size = 0;
@@ -114,13 +121,14 @@ namespace WebAppEs.Controllers
                     file[0].CopyTo(fs);
                     fs.Flush();
                 }
-                result = $@"\FaultImages\{ filename}";
+                im.Url = "/FaultImages/"+ filename;
+                im.Name =  filename;
             }
             catch (Exception ex)
             {
-                result = ex.Message;
+                im.Url = ex.Message;
             }
-            return result;
+            return im;
         }
         public JsonResult FileRemove(string ImgPath)
         {
@@ -200,10 +208,10 @@ namespace WebAppEs.Controllers
             return Json(status);
         }
 
-        public JsonResult LoadSortedTopResult(DateTime Date,  Guid ModelID, string AnalysisType)
+        public JsonResult LoadSortedTopResult(DateTime Date,  Guid ModelID, string AnalysisType, string LineNo)
         {
             List<MRNDHQC_TopFaultAnalysisVM> data = new List<MRNDHQC_TopFaultAnalysisVM>();
-            var listdata = _dataAccessService.AllTopFaultModelWise(Date, ModelID, AnalysisType);
+            var listdata = _dataAccessService.AllTopFaultModelWise(Date, ModelID, AnalysisType, LineNo);
             if(listdata.Count != 0)
             {
                 data = listdata;

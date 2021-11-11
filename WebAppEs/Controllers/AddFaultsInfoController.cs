@@ -188,7 +188,7 @@ namespace WebAppEs.Controllers
             //viewmodel.PartsModelViewModel = _dataAccessService.GetAllPartsModelList();
             //return View(viewmodel);
         }
-
+        [Authorize("Authorization")]
         public IActionResult FaultsDetails()
         {
             var employeeID = HttpContext.Session.GetString("EmployeeID");
@@ -286,7 +286,7 @@ namespace WebAppEs.Controllers
 
             return Json(status);
         }
-
+        [Authorize("Authorization")]
         public IActionResult FullPreview(Guid Id)
         {
             var employeeID = HttpContext.Session.GetString("EmployeeID");

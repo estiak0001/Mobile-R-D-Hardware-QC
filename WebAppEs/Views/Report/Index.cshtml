@@ -3,110 +3,13 @@
 
 
 <div class="x_panel">
-    <a style="float:right" class="btn btn-info" asp-action="PrintDetails"> <i class="fa fa-print pr-2"></i>Faults Details</a>
+    <a style="float:right" class="btn btn-info" asp-action="PrintDetails"> <i class="fa fa-print pr-2"></i>Inline/Aging/OQC</a>
     <div class="x_title">
         <h2>Faults List Report</h2>
         <div class="clearfix"></div>
     </div>
     <div class="container">
-        <!-- start form for validation -->
-        <form method="post" id="reportform" asp-action="Print">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label>From Date</label>
-                            <input id="txtFromDate" asp-for="FromDate" class="form-control" />
-                            <span class="text-danger" asp-validation-for="FromDate"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <label>To Date</label>
-                            <input id="txtToDate" asp-for="ToDate" class="form-control" />
-                            <span class="text-danger" asp-validation-for="ToDate"></span>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label>Line No.</label>
-                            <select asp-for="LineNo" id="ddlLine" class="form-control">
-                                <option value="@Model.LineNo">--Select Line--</option>
-                                <option value="1">Line 1</option>
-                                <option value="2">Line 2</option>
-                                <option value="3">Line 3</option>
-                                <option value="4">Line 4</option>
-                                <option value="5">Line 5</option>
-                                <option value="6">Line 6</option>
-                                <option value="7">Line 7</option>
-                                <option value="8">Line 8</option>
-                                <option value="9">Line 9</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 ">
-                    <label>Model</label>
-                    <select asp-for="PartsModelID" id="ddlModel" class="form-control">
-                        <option value="@Model.PartsModelID">--Select Model--</option>
-                        @foreach (var item in Model.PartsModelViewModel)
-                        {
-            <option value="@item.ID">@item.Name</option>
-}
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label>Lot No.</label>
-                    <select asp-for="LotNo" id="ddlLot" class="form-control">
-                        <option value="@Model.LotNo">--Select Lot--</option>
-                        <option value="1st">1st</option>
-                        <option value="2nd">2nd</option>
-                        <option value="3rd">3rd</option>
-                        <option value="4th">4th</option>
-                        <option value="5th">5th</option>
-                        <option value="6th">6th</option>
-                        <option value="7th">7th</option>
-                        <option value="8th">8th</option>
-                        <option value="9th">9th</option>
-                        <option value="10th">10th</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label>Employee</label>
-                    <select asp-for="EmployeeID" id="ddlEmployee" class="form-control">
-                        <option value="@Model.EmployeeID">--Select Employee--</option>
-                        @foreach (var item in Model.EmployeeListVM)
-                        {
-            <option value="@item.EmployeeID">@item.EmployeeName</option>
-}
-                    </select>
-                </div>
-            </div>
-            <div style="margin-top:10px">
-                <div class="row">
-                    <div class="col-md-6">
-
-                    </div>
-                    <div style="text-align: end;" class="col-md-6">
-                        <div class="form-inline">
-                            <div class="checkbox">
-                                <label style="font-weight:bold; font-size:large">
-                                    <input id="withQty" asp-for="@Model.WithQty" type="checkbox" class="flat"> &nbsp; With Qty.
-                                </label>
-                            </div>
-                            <button style="margin-left:10px" id="btnSubmit" type="submit" class="btn btn-success">Print List</button>
-                            @*<button style="margin-left:10px" id="btnSubmit2" class="btn btn-success">Print Details</button>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <div style="text-align:end">
-            <button style="margin-left:5px" id="btnPreview" class="btn btn-dark">Preview</button>
-        </div>
-        <div style="margin-top:10px" id="PreviewData" class="tablecontainer">
-
-        </div>
+        <h1>Fault's Reporting comming soon..</h1>
     </div>
 </div>
 

@@ -1,5 +1,6 @@
 ﻿@model WebAppEs.ViewModel.DailyMaxFaultAnalysis.MRNDHQC_TopFaultHeadVM
 @inject IJsonHelper Json;
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env;
 
 @{ ViewData["Title"] = "Create"; }
 
@@ -131,7 +132,7 @@
                                 <label>Date</label>
 
                                 @*<input asp-for="Date" class="form-control form-control-sm">
-            <span asp-validation-for="Date" class="text-danger"></span>*@
+                                    <span asp-validation-for="Date" class="text-danger"></span>*@
                                 @if (Model.IsUpdate == "Update")
                                 {
                                     <input id="txtDate" disabled asp-for="Date" class="form-control" /> }
@@ -169,7 +170,47 @@
                                 </div>
                             }
 
-                            <div class="col-md-3">
+                            @if (Model.IsUpdate == "Update")
+                            {
+                                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                                    <label>Line No.</label>
+                                    <select disabled asp-for="LineNo" id="ddlLine" class="form-control">
+                                        <option value="">--Select Line--</option>
+                                        <option value="1">Line 1</option>
+                                        <option value="2">Line 2</option>
+                                        <option value="3">Line 3</option>
+                                        <option value="4">Line 4</option>
+                                        <option value="5">Line 5</option>
+                                        <option value="6">Line 6</option>
+                                        <option value="7">Line 7</option>
+                                        <option value="8">Line 8</option>
+                                        <option value="9">Line 9</option>
+                                    </select>
+                                    <span class="error">Please select Line!</span>
+                                </div>
+                            }
+
+                            else
+                            {
+                                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                                    <label>Line No.</label>
+                                    <select asp-for="LineNo" id="ddlLine" class="form-control">
+                                        <option value="">--Select Line--</option>
+                                        <option value="1">Line 1</option>
+                                        <option value="2">Line 2</option>
+                                        <option value="3">Line 3</option>
+                                        <option value="4">Line 4</option>
+                                        <option value="5">Line 5</option>
+                                        <option value="6">Line 6</option>
+                                        <option value="7">Line 7</option>
+                                        <option value="8">Line 8</option>
+                                        <option value="9">Line 9</option>
+                                    </select>
+                                    <span class="error">Please select Line!</span>
+                                </div>
+                            }
+
+                            <div class="col-md-2">
                                 <label for="ddlCategory">Category* :</label>
                                 <select required id="ddlCategory" class="form-control">
                                     <option value="">--Select Category--</option>
@@ -189,7 +230,7 @@
                                 </select>
                                 <span class="error">Please select Fault Type!</span>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="ddlSubCategory">Sub Category* :</label>
                                 <select id="ddlSubCategory" class="form-control">
                                     <option value="">--Select Sub Category--</option>
@@ -217,15 +258,15 @@
                     <div class="col-md-10">
                         <div class="row">
                             @*<div class="col-md-3">
-                                <label for="ddlAnalysisType">Analysis Type* :</label>
-                                <select id="ddlAnalysisType" class="form-control">
-                                    <option value="">--Select Analysis Type--</option>
-                                    <option value="In Line">In Line</option>
-                                    <option value="Aging">Aging</option>
-                                    <option value="OQC">OQC</option>
-                                </select>
-                                <span class="error">Please select Analysis Type!</span>
-                            </div>*@
+                                    <label for="ddlAnalysisType">Analysis Type* :</label>
+                                    <select id="ddlAnalysisType" class="form-control">
+                                        <option value="">--Select Analysis Type--</option>
+                                        <option value="In Line">In Line</option>
+                                        <option value="Aging">Aging</option>
+                                        <option value="OQC">OQC</option>
+                                    </select>
+                                    <span class="error">Please select Analysis Type!</span>
+                                </div>*@
                             <div style="" class="col-md-4 col-sm-4  form-group has-feedback">
                                 <label style="">Reason</label>
                                 <textarea style="height: 38px;" class="form-control" id="txtReason" placeholder="Enter Reason."></textarea>
@@ -373,7 +414,7 @@
                 }
             });
         });
-        
+
         function RefreshImage() {
             $('#f_UploadImage').val("");
             $("#myUploadedImg").attr("src", "/Banner/default.png");
@@ -396,6 +437,7 @@
     <script>
         $(document).ready(function () {
             var IMGURL = "";
+            var DisplayUrl = "";
             $('#LoadedSortData').html('Select filter dropdown to preview...');
             var faultsItem = [];
             var LoadedSortData = [];
@@ -421,6 +463,7 @@
                             SubCategory: LoadTopDataForEidit[h].subCategory,
                             Quantity: 0,
                             ImageUrl: LoadTopDataForEidit[h].imageUrl,
+                            DisplayUrl: LoadTopDataForEidit[h].displayUrl,
                             Reason: LoadTopDataForEidit[h].reason,
                             Sample: Number(LoadTopDataForEidit[h].sample),
                             Remarks: LoadTopDataForEidit[h].remarks,
@@ -557,6 +600,7 @@
                             SubCategory: SubCategoryText,
                             Quantity: 0,
                             ImageUrl: IMGURL,
+                            DisplayUrl: DisplayUrl,
                             Reason: reason,
                             Sample: Number(sample),
                             Remarks: remarks,
@@ -594,6 +638,16 @@
                 }
                 else {
                     $('#ddlmodelError').css('visibility', 'hidden');
+                }
+
+                if ($('#ddlLine').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlLine').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    var LineNo = $('#ddlLine').val().trim();
+                    var LineText = $("#ddlLine option:selected").text();
+                    $('#ddlCategory').siblings('span.error').css('visibility', 'hidden');
                 }
 
                 if ($('#ddlCategory').val().trim() == '') {
@@ -640,6 +694,7 @@
                         Date: $('#txtDate').val().trim(),
                         PartsModelID: $('#ddlModel').val().trim(),
                         AnalysisType: $('#ddlAnalysisType').val().trim(),
+                        LineNo: $('#ddlLine').val().trim(),
                         MRNDHQC_TopFaultAnalysisList: faultsItem
                     }
                     console.log(data);
@@ -697,6 +752,16 @@
 
                 if ($('#ddlAnalysisType').val().trim() == '') {
                     alert("Please Select Analysis Type First!");
+                    //Clear();
+                }
+                else {
+                    DropDownChangeData2();
+                }
+            });
+
+            $('#ddlLine').on('change', function () {
+                if ($('#ddlModel').val().trim() == "00000000-0000-0000-0000-000000000000"){
+                    alert("Please Select Model First!");
                     //Clear();
                 }
                 else {
@@ -874,6 +939,7 @@
             function DropDownChangeData2() {
                 var date = null;
                 var ModelID = null;
+                var LineNo = null;
                 var AnalysisType = null;
                 if ($('#ddlAnalysisType').val().trim() != "") {
                     AnalysisType = $('#ddlAnalysisType').val().trim();
@@ -884,10 +950,15 @@
                 if ($('#ddlModel').val().trim() != "") {
                     ModelID = $('#ddlModel').val().trim();
                 }
+                if ($('#ddlLine').val().trim() != "") {
+                    LineNo = $('#ddlLine').val().trim();
+                }
+
                 var data = {
                     Date: date,
                     ModelID: ModelID,
                     AnalysisType: AnalysisType,
+                    LineNo: LineNo,
                 }
                 console.log(data);
                     $.ajax({
@@ -919,6 +990,10 @@
                                     });
                                 }
                                 if (result.length != 0) {
+                                    GeneratedItemsTable();
+                                }
+                                else {
+                                    faultsItem = [];
                                     GeneratedItemsTable();
                                 }
                                 console.log(faultsItem);
@@ -972,10 +1047,12 @@
                         async: false,
                         success: function (message) {
                             IMGURL = "";
+                            DisplayUrl = "";
                             //$("#myUploadedImg").removeAttr("src").attr("src", message);
                             //$("#myUploadedImg").attr("src", message);
                             //$("a").attr("href", message)
-                            IMGURL = message;
+                            IMGURL = message.name;
+                            DisplayUrl = message.url;
                         },
                         error: function () {
                             alert("Error!");
@@ -1005,8 +1082,8 @@
                             $row.append($('<td/>').html("Picture wasn't detected"));
                         }
                         else {
-                            var replacedata = val.ImageUrl.replace("/", "'\'");
-                            var $img = $('<a style="font-size: large; color:blueviolet;" target="_blank" href = "' + wwwrootpath + replacedata + '"> <i class="fa fa-image"></i> </a>');
+                            var ui = "@Url.Content("~/FaultImages/")" + val.ImageUrl;
+                            var $img = $('<a style="font-size: large; color:blueviolet;" target="_blank" href = "' + ui +'"> <i class="fa fa-image"></i> </a>');
                             $row.append($('<td/>').html($img));
                         }
                         $row.append($('<td/>').html(val.SubCategory));

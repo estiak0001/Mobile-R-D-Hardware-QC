@@ -86,83 +86,101 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="~/ZingChart/zingchart.min.js"></script>
     <script>
-        var LoadDataForChartLavel = @Json.Serialize(Model.Lavel.LavelName);
-        var Functional = @Json.Serialize(Model.FaultPercentageForChartWithFunAes.Functional);
-        var Aesthetic = @Json.Serialize(Model.FaultPercentageForChartWithFunAes.Aesthetic);
 
+        $(document).ready(function () {
+            var LoadDataForChartLavel = @Json.Serialize(Model.Lavel.LavelName);
+            var Functional = @Json.Serialize(Model.FaultPercentageForChartWithFunAes.Functional);
+            var Aesthetic = @Json.Serialize(Model.FaultPercentageForChartWithFunAes.Aesthetic);
 
-        var Dummy = {
-            labels: ["M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "M22 Line 1", "L2 Line 2", "L2 Line 2"],
-            datasets: [
-                {
-                    label: "Functional",
-                    backgroundColor: "#3e95cd",
-                    data: [1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34]
-                }, {
-                    label: "Aesthetic",
-                    backgroundColor: "#8e5ea2",
-                    data: [4.08, 5.47, 6.75, 7.34, 1.33, 1.33, 2.21, 7.83, 2.478, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34, 1.33, 2.21, 7.83, 2.478, 1.33, 4.08, 5.47, 6.75, 7.34]
-                }
-            ]
-        };
+            loadChartByFilter(LoadDataForChartLavel, Functional, Aesthetic);
 
-        var data = {
-            labels: LoadDataForChartLavel,
-            datasets: [
-                {
-                    label: "Functional",
-                    backgroundColor: "#3e95cd",
-                    data: Functional
-                }, {
-                    label: "Aesthetic",
-                    backgroundColor: "#8e5ea2",
-                    data: Aesthetic
-                }
-            ]
-        };
-
-
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: data,
-            options: {
-                title: {
-                    display: true,
-                    text: 'Line Wise Fault % (10.30.2021)'
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
+            $('#txtFilterDate').on('change', function () {
+                //alert($('#txtFilterDate').val().trim());
+                var data = {
+                    Date: $('#txtFilterDate').val().trim(),
                     }
-                },
-                animation: {
-                    duration: 500,
-                    easing: "easeOutQuart",
-                    onComplete: function () {
-                        var ctx = this.chart.ctx;
-                        ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'bottom';
-
-                        this.data.datasets.forEach(function (dataset) {
-                            for (var i = 0; i < dataset.data.length; i++) {
-                                var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
-                                    scale_max = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._yScale.maxHeight;
-                                ctx.fillStyle = '#444';
-                                var y_pos = model.y - 5;
-                                // Make sure data value does not get overflown and hidden
-                                // when the bar's value is too close to max value of scale
-                                // Note: The y value is reverse, it counts from top down
-                                if ((scale_max - model.y) / scale_max >= 0.93)
-                                    y_pos = model.y + 20;
-                                ctx.fillText(dataset.data[i]+"%", model.x, y_pos);
+                    $.ajax({
+                        data: data,
+                        url: '@Url.Action("LoadChartDataBayFilter", "Home")',
+                        type: 'GET',
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        success: function (result) {
+                            if (result != null) {
+                                console.log(result.lavel.lavelName);
+                                console.log(result.faultPercentageForChartWithFunAes.functional);
+                                console.log(result.faultPercentageForChartWithFunAes.aesthetic);
+                                loadChartByFilter(result.lavel.lavelName, result.faultPercentageForChartWithFunAes.functional, result.faultPercentageForChartWithFunAes.aesthetic);
+                               
                             }
-                        });
+                        }
+                    });
+            });
+
+        });
+
+
+
+        function loadChartByFilter(lavel, functionaldata, aestheticdata) {
+
+            var data = {
+                labels: lavel,
+                datasets: [
+                    {
+                        label: "Functional",
+                        backgroundColor: "#3e95cd",
+                        data: functionaldata
+                    }, {
+                        label: "Aesthetic",
+                        backgroundColor: "#8e5ea2",
+                        data: aestheticdata
+                    }
+                ]
+            };
+
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Line Wise Fault % (10.30.2021)'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    animation: {
+                        duration: 500,
+                        easing: "easeOutQuart",
+                        onComplete: function () {
+                            var ctx = this.chart.ctx;
+                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontFamily, 'normal', Chart.defaults.global.defaultFontFamily);
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+
+                            this.data.datasets.forEach(function (dataset) {
+                                for (var i = 0; i < dataset.data.length; i++) {
+                                    var model = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._model,
+                                        scale_max = dataset._meta[Object.keys(dataset._meta)[0]].data[i]._yScale.maxHeight;
+                                    ctx.fillStyle = '#444';
+                                    var y_pos = model.y - 5;
+                                    // Make sure data value does not get overflown and hidden
+                                    // when the bar's value is too close to max value of scale
+                                    // Note: The y value is reverse, it counts from top down
+                                    if ((scale_max - model.y) / scale_max >= 0.93)
+                                        y_pos = model.y + 20;
+                                    ctx.fillText(dataset.data[i] + "%", model.x, y_pos);
+                                }
+                            });
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     </script>
     <script>
         $(document).ready(function () {
@@ -197,513 +215,6 @@
                 }
 
             });
-
-            @*var LoadDataForChartLavel = @Json.Serialize(Model.Lavel.LavelName);
-            var LoadDataForFunctionalProduction = @Json.Serialize(Model.FunctionalFaultsPercentageViewModel.Production);
-            var LoadDataForFunctionalMaterial = @Json.Serialize(Model.FunctionalFaultsPercentageViewModel.Material);
-            var LoadDataForFunctionalSoftware = @Json.Serialize(Model.FunctionalFaultsPercentageViewModel.Software);
-
-            var FunMatFault = @Json.Serialize(Model.FunctionalFaultsPercentageViewModel.TotalFuncMaterialFaultPercent);
-            var FunProFault = @Json.Serialize(Model.FunctionalFaultsPercentageViewModel.TotalFuncProductionFaultPercent);
-            var FunSoftFault = @Json.Serialize(Model.FunctionalFaultsPercentageViewModel.TotalFuncSoftwareFaultPercent);
-
-            var LoadDataForAesProduction = @Json.Serialize(Model.AestheticFaultsPercentageViewModel.Production);
-            var LoadDataForAesMaterial = @Json.Serialize(Model.AestheticFaultsPercentageViewModel.Material);
-
-            var AesMatFault = @Json.Serialize(Model.AestheticFaultsPercentageViewModel.TotalAestheticMaterialFaultPercent);
-            var AesProFault = @Json.Serialize(Model.AestheticFaultsPercentageViewModel.TotalAestheticProductionFaultPercent);*@
-
-            $('#txtFilterDate').on('change', function () {
-                //alert($('#txtFilterDate').val().trim());
-                var data = {
-                    Date: $('#txtFilterDate').val().trim(),
-                    }
-                    $.ajax({
-                        data: data,
-                        url: '@Url.Action("LoadChartDataBayFilter", "Home")',
-                        type: 'GET',
-                        dataType: "JSON",
-                        contentType: "application/json",
-                        success: function (result) {
-                            if (result != null) {
-                                console.log(result);
-                                LoadChart(result.lavel.lavelName, result.functionalFaultsPercentageViewModel.production, result.functionalFaultsPercentageViewModel.material, result.functionalFaultsPercentageViewModel.software);
-                                LoadPieChart(result.functionalFaultsPercentageViewModel.totalFuncProductionFaultPercent, result.functionalFaultsPercentageViewModel.totalFuncMaterialFaultPercent, result.functionalFaultsPercentageViewModel.totalFuncSoftwareFaultPercent);
-
-                                LoadChart2(result.lavel.lavelName, result.aestheticFaultsPercentageViewModel.production, result.aestheticFaultsPercentageViewModel.material);
-                                LoadPieChart2(result.aestheticFaultsPercentageViewModel.totalAestheticProductionFaultPercent, result.aestheticFaultsPercentageViewModel.totalAestheticMaterialFaultPercent);
-                            }
-                        }
-                    });
-            });
-
-            ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
-            window.addEventListener('load', function () {
-                LoadChart(LoadDataForChartLavel, LoadDataForFunctionalProduction, LoadDataForFunctionalMaterial, LoadDataForFunctionalSoftware);
-                LoadChart2(LoadDataForChartLavel, LoadDataForAesProduction, LoadDataForAesMaterial);
-                LoadPieChart(FunProFault, FunMatFault, FunSoftFault);
-                LoadPieChart2(AesProFault, AesMatFault);
-            });
-            function LoadChart(lavel, production, Material, Software) {
-                //alert();
-                const myConfig = {
-                    fontSize: 2,
-
-                    type: 'bar',
-                    title: {
-                        text: 'Functional Fault Percentage',
-                        fontSize: 14,
-                        color: 'black'
-                    },
-                    "plotarea": {
-                        "margin": "dynamic",
-
-                    },
-                    legend: {
-                        draggable: true,
-                    },
-                    gui: {
-                        behaviors: [ //default contextMenu behaviors
-                            {
-                                id: "Reload", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "SaveAsImage",
-                                enabled: "all"
-                            },
-                            {
-                                id: "DownloadPDF", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "DownloadSVG",
-                                enabled: "all"
-                            },
-                            {
-                                id: "Print",
-                                enabled: "none"
-                            },
-                            {
-                                id: "ViewSource", //built-in id
-                                enabled: "none" //sets visibility to hide
-                            },
-                            {
-                                id: "About ZingChart" //removed with licensing
-                            }
-                        ]
-                    },
-                    scaleX: {
-                        // set scale label
-                        label: {
-                            text: 'Line, Model and Lot Wise Faults',
-                        },
-                        "item": {
-                            "font-size": 9,
-                            "font-weight": "bold",
-                            "color": "black"
-                        },
-                        // convert text on scale indices
-                        labels: lavel,
-                        zooming: true,
-                        zoomTo: [
-                            0,
-                            9
-                        ]
-                    },
-                    scaleY: {
-                        label: {
-                            text: 'Faults Percentage'
-                        }
-                    },
-
-
-                    plot: {
-                        decimals: 2,
-                        'value-box': {
-                            text: '%v%',
-                            'font-size': 9
-                        },
-                        tooltip: {
-                            decimals: 2,
-                        },
-                        // animation docs here:
-                        animation: {
-                            effect: 'ANIMATION_EXPAND_BOTTOM',
-                            method: 'ANIMATION_STRONG_EASE_OUT',
-                            sequence: 'ANIMATION_BY_NODE',
-                            speed: 275,
-                        }
-                    },
-                    scrollX: {
-                        bar: {
-                            alpha: 0.5,
-                            backgroundColor: '#a6a6a6',
-                            borderRadius: '5px'
-                        },
-                        handle: {
-                            backgroundColor: 'white',
-                            borderRadius: '5px',
-                            borderTop: '1px solid #a6a6a6',
-                            borderRight: '1px solid #a6a6a6',
-                            borderBottom: '1px solid #a6a6a6',
-                            borderLeft: '1px solid #a6a6a6'
-                        }
-                    },
-                    series: [{
-                        // plot 1 values, linear data
-                        values: production,
-                        text: 'Production',
-                        backgroundColor: '#ef5350'
-                    },
-
-                    {
-                        // plot 2 values, linear data
-                        values: Material,
-                        text: 'Material',
-                        backgroundColor: '#007bff'
-                    },
-
-                    {
-                        // plot 2 values, linear data
-                        values: Software,
-                        text: 'Software',
-                        backgroundColor: '#66bb6a'
-                    }
-                    ]
-                };
-
-                zingchart.render({
-                    id: 'myChart',
-                    data: myConfig,
-                    height: '100%',
-                    width: '100%'
-                });
-            }
-            function LoadPieChart(productionpie, Materialpie, Softwarepie) {
-                var myConfig = {
-                    type: "pie",
-                    gui: {
-                        behaviors: [ //default contextMenu behaviors
-                            {
-                                id: "Reload", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "SaveAsImage",
-                                enabled: "all"
-                            },
-                            {
-                                id: "DownloadPDF", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "DownloadSVG",
-                                enabled: "all"
-                            },
-                            {
-                                id: "Print",
-                                enabled: "none"
-                            },
-                            {
-                                id: "ViewSource", //built-in id
-                                enabled: "none" //sets visibility to hide
-                            },
-                            {
-                                id: "About ZingChart" //removed with licensing
-                            }
-                        ]
-                    },
-                    plot: {
-                        borderColor: "#2B313B",
-                        //decimals: 4,
-                        borderWidth: 3,
-                        // slice: 90,
-                        valueBox: {
-                            placement: 'out',
-                            //text: '%t\n%npv%',
-                            text: '%t\n%v%',
-                            fontFamily: "Open Sans"
-                        },
-                        tooltip: {
-                            fontSize: '18',
-                            fontFamily: "Open Sans",
-                            padding: "5 10",
-                            text: "%v%"
-                        },
-                        animation: {
-                            effect: 2,
-                            method: 5,
-                            speed: 675,
-                            sequence: 1
-                        }
-                    },
-                    source: {
-                        //text: 'gs.statcounter.com',
-                        fontColor: "#8e99a9",
-                        fontFamily: "Open Sans"
-                    },
-                    title: {
-                        fontColor: "black",
-                        text: 'Overall Fault Percentage (Functional)',
-                        align: "center",
-                        fontSize: 14
-                    },
-                    //subtitle: {
-                    //    offsetX: 10,
-                    //    offsetY: 10,
-                    //    fontColor: "#8e99a9",
-                    //    fontFamily: "Open Sans",
-                    //    fontSize: "16",
-                    //    text: 'May 2016',
-                    //    align: "left"
-                    //},
-                    plotarea: {
-                        margin: "20 0 0 0"
-                    },
-                    series: [{
-                        values: productionpie,
-                        text: "Production",
-                        backgroundColor: '#ef5350',
-                    },
-                    {
-                        values: Materialpie,
-                        text: "Material",
-                        backgroundColor: '#007bff',
-                        //detached: true
-                    },
-                    {
-                        values: Softwarepie,
-                        text: 'Software',
-                        backgroundColor: '#66bb6a',
-                        //detached: true
-                    }
-                    ]
-                };
-
-                zingchart.render({
-                    id: 'pieChart',
-                    data: myConfig,
-                    height: '100%',
-                    width: '100%'
-                });
-            }
-            function LoadChart2(lavel, production, Material) {
-                //alert();
-                const myConfig = {
-                    type: 'bar',
-                    title: {
-                        text: 'Aesthetic Fault Percentage',
-                        fontSize: 14,
-                        color: 'black'
-                    },
-                    legend: {
-                        draggable: true,
-                    },
-                    gui: {
-                        behaviors: [ //default contextMenu behaviors
-                            {
-                                id: "Reload", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "SaveAsImage",
-                                enabled: "all"
-                            },
-                            {
-                                id: "DownloadPDF", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "DownloadSVG",
-                                enabled: "all"
-                            },
-                            {
-                                id: "Print",
-                                enabled: "none"
-                            },
-                            {
-                                id: "ViewSource", //built-in id
-                                enabled: "none" //sets visibility to hide
-                            },
-                            {
-                                id: "About ZingChart" //removed with licensing
-                            }
-                        ]
-                    },
-                    scaleX: {
-                        label: {
-                            text: 'Line, Model and Lot Wise Faults'
-                        },
-                        "item": {
-                            "font-size": 9,
-                            "font-weight": "bold",
-                            "color": "black"
-                        },
-                        labels: lavel,
-                        zooming: true,
-                        zoomTo: [
-                            0,
-                            9
-                        ]
-                    },
-                    scaleY: {
-                        // scale label with unicode character
-                        label: {
-                            text: 'Faults Percentage'
-                        }
-                    },
-
-                    plot: {
-                        decimals: 2,
-                        'value-box': {
-                            text: '%v%',
-                            'font-size': 9
-                        },
-                        tooltip: {
-                            decimals: 2,
-                        },
-                        // animation docs here:
-                        animation: {
-                            effect: 'ANIMATION_EXPAND_BOTTOM',
-                            method: 'ANIMATION_STRONG_EASE_OUT',
-                            sequence: 'ANIMATION_BY_NODE',
-                            speed: 275,
-                        }
-                    },
-                    scrollX: {
-                        bar: {
-                            alpha: 0.5,
-                            backgroundColor: '#a6a6a6',
-                            borderRadius: '5px'
-                        },
-                        handle: {
-                            backgroundColor: 'white',
-                            borderRadius: '5px',
-                            borderTop: '1px solid #a6a6a6',
-                            borderRight: '1px solid #a6a6a6',
-                            borderBottom: '1px solid #a6a6a6',
-                            borderLeft: '1px solid #a6a6a6'
-                        }
-                    },
-                    series: [{
-                        // plot 1 values, linear data
-                        values: production,
-                        text: 'Production',
-                        backgroundColor: '#ef5350'
-                    },
-                    {
-                        // plot 2 values, linear data
-                        values: Material,
-                        text: 'Material',
-                        backgroundColor: '#007bff'
-                    }
-                    ]
-                };
-
-                zingchart.render({
-                    id: 'myChart2',
-                    data: myConfig,
-                    height: '100%',
-                    width: '100%'
-                });
-            }
-            function LoadPieChart2(productionpie, Materialpie) {
-                var myConfig = {
-                    type: "pie",
-                    gui: {
-                        behaviors: [ //default contextMenu behaviors
-                            {
-                                id: "Reload", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "SaveAsImage",
-                                //enabled: "all"
-                            },
-                            {
-                                id: "DownloadPDF", //built-in id
-                                enabled: "all" //sets visibility to show
-                            },
-                            {
-                                id: "DownloadSVG",
-                                enabled: "all"
-                            },
-                            {
-                                id: "Print",
-                                enabled: "none"
-                            },
-                            {
-                                id: "ViewSource", //built-in id
-                                enabled: "none" //sets visibility to hide
-                            },
-                            {
-                                id: "About ZingChart" //removed with licensing
-                            }
-                        ]
-                    },
-                    plot: {
-                        borderColor: "#2B313B",
-                        //decimals: 4,
-                        borderWidth: 3,
-                        // slice: 90,
-                        valueBox: {
-                            placement: 'out',
-                            text: '%t\n%v%',
-                            fontFamily: "Open Sans"
-                        },
-                        tooltip: {
-                            fontSize: '18',
-                            fontFamily: "Open Sans",
-                            padding: "5 10",
-                            text: "%v%"
-                        },
-                        animation: {
-                            effect: 2,
-                            method: 5,
-                            speed: 675,
-                            sequence: 1
-                        }
-                    },
-                    title: {
-                        fontColor: "black",
-                        text: 'Overall Fault Percentage (Aesthetic)',
-                        align: "center",
-                        fontSize: 14,
-                    },
-                    //subtitle: {
-                    //    offsetX: 10,
-                    //    offsetY: 10,
-                    //    fontColor: "#8e99a9",
-                    //    fontFamily: "Open Sans",
-                    //    fontSize: "16",
-                    //    text: 'May 2016',
-                    //    align: "left"
-                    //},
-                    plotarea: {
-                        margin: "20 0 0 0"
-                    },
-                    series: [{
-                        values: productionpie,
-                        text: "Production",
-                        backgroundColor: '#ef5350',
-                    },
-                    {
-                        values: Materialpie,
-                        text: "Material",
-                        backgroundColor: '#007bff',
-                        //detached: true
-                    }
-                    ]
-                };
-
-                zingchart.render({
-                    id: 'pieChart2',
-                    data: myConfig,
-                    height: '100%',
-                    width: '100%'
-                });
-            }
         });
     </script>
 }

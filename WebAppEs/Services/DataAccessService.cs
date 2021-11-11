@@ -14,6 +14,8 @@ using WebAppEs.ViewModel.Home;
 using WebAppEs.ViewModel.Register;
 using WebAppEs.ViewModel.Report;
 using WebAppEs.ViewModel.DailyMaxFaultAnalysis;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WebAppEs.Services
 {
@@ -21,11 +23,12 @@ namespace WebAppEs.Services
 	{
 		private readonly IMemoryCache _cache;
 		private readonly ApplicationDbContext _context;
-
-		public DataAccessService(ApplicationDbContext context, IMemoryCache cache)
+		private readonly IWebHostEnvironment _hostEnvironment;
+		public DataAccessService(ApplicationDbContext context, IWebHostEnvironment hostEnvironment, IMemoryCache cache)
 		{
 			_cache = cache;
 			_context = context;
+			_hostEnvironment = hostEnvironment;
 		}
 
 		public async Task<List<NavigationMenuViewModel>> GetMenuItemsAsync(ClaimsPrincipal principal)
@@ -233,6 +236,7 @@ namespace WebAppEs.Services
 					Date = viewModel.Date,
 					EmployeeID = viewModel.EmployeeID,
 					PartsModelID = viewModel.PartsModelID,
+					LineNo = viewModel.LineNo,
 					AnalysisType = viewModel.AnalysisType,
 					LUser = viewModel.LUser
 				});
@@ -661,21 +665,76 @@ namespace WebAppEs.Services
 			return items;
 		}
 
-        public List<DetailsReportViewModel> DetailsReportList(DateTime? Date)
+        public List<MRNDHQC_TopFaultAnalysisVM> Inline(DateTime? Date)
         {
-			var data = (from fadt in _context.MobileRNDFaultDetails.Where(x => x.Date == Date).DefaultIfEmpty()
-						 join entry in _context.MobileRNDFaultsEntry on fadt.FaultEntryID equals entry.Id 
-						 join model in _context.MobileRNDPartsModels on entry.PartsModelID equals model.Id
-						 select new DetailsReportViewModel()
+			var data = (from fadt in _context.MRNDHQC_TopFaultHead.Where(x => x.Date == Date && x.AnalysisType == "In Line").DefaultIfEmpty()
+						 join entry in _context.MRNDHQC_TopFaultAnalysis on fadt.Id equals entry.HeadID 
+						 join model in _context.MobileRNDPartsModels on fadt.PartsModelID equals model.Id
+						join cat in _context.MRNDQC_Category on entry.CategoryID equals cat.Id
+						join Subcat in _context.MRNDQC_SubCategory on entry.SubCategoryID equals Subcat.Id
+						select new MRNDHQC_TopFaultAnalysisVM()
 						 {
-							 LineNo = entry.LineNo,
-							 LineWithModel = "Assembly Line "+entry.LineNo+" Model: "+model.ModelName +"/"+entry.LotNo,
-
-						 }).OrderBy(d => d.LineNo).ToList();
+							 Line = fadt.LineNo,
+							 Model = model.ModelName,
+							 Category = cat.CategoryName,
+							 SubCategory = Subcat.SubCategoryName,
+							 Reason = entry.Reason,
+							 Sample = entry.Sample,
+							 Remarks = entry.Remarks,
+							 ProblemSolAndRec = entry.ProblemSolAndRec,
+							ImageUrl = entry.ImageUrl,
+							DisplayUrl = Path.Combine(_hostEnvironment.WebRootPath, "FaultImages", entry.ImageUrl) ,
+						 }).OrderBy(d => d.Line).ToList();
 				return data;
 		}
 
-        public bool RemoveeNTRY(Guid Id)
+		public List<MRNDHQC_TopFaultAnalysisVM> Aging(DateTime? Date)
+		{
+			var data = (from fadt in _context.MRNDHQC_TopFaultHead.Where(x => x.Date == Date && x.AnalysisType == "Aging").DefaultIfEmpty()
+						join entry in _context.MRNDHQC_TopFaultAnalysis on fadt.Id equals entry.HeadID
+						join model in _context.MobileRNDPartsModels on fadt.PartsModelID equals model.Id
+						join cat in _context.MRNDQC_Category on entry.CategoryID equals cat.Id
+						join Subcat in _context.MRNDQC_SubCategory on entry.SubCategoryID equals Subcat.Id
+						select new MRNDHQC_TopFaultAnalysisVM()
+						{
+							Line = fadt.LineNo,
+							Model = model.ModelName,
+							Category = cat.CategoryName,
+							SubCategory = Subcat.SubCategoryName,
+							Reason = entry.Reason,
+							Sample = entry.Sample,
+							Remarks = entry.Remarks,
+							ProblemSolAndRec = entry.ProblemSolAndRec,
+							ImageUrl = entry.ImageUrl,
+							DisplayUrl = Path.Combine(_hostEnvironment.WebRootPath, "FaultImages", entry.ImageUrl),
+						}).OrderBy(d => d.Line).ToList();
+			return data;
+		}
+
+		public List<MRNDHQC_TopFaultAnalysisVM> OQC(DateTime? Date)
+		{
+			var data = (from fadt in _context.MRNDHQC_TopFaultHead.Where(x => x.Date == Date && x.AnalysisType == "OQC").DefaultIfEmpty()
+						join entry in _context.MRNDHQC_TopFaultAnalysis on fadt.Id equals entry.HeadID
+						join model in _context.MobileRNDPartsModels on fadt.PartsModelID equals model.Id
+						join cat in _context.MRNDQC_Category on entry.CategoryID equals cat.Id
+						join Subcat in _context.MRNDQC_SubCategory on entry.SubCategoryID equals Subcat.Id
+						select new MRNDHQC_TopFaultAnalysisVM()
+						{
+							Line = fadt.LineNo,
+							Model = model.ModelName,
+							Category = cat.CategoryName,
+							SubCategory = Subcat.SubCategoryName,
+							Reason = entry.Reason,
+							Sample = entry.Sample,
+							Remarks = entry.Remarks,
+							ProblemSolAndRec = entry.ProblemSolAndRec,
+							ImageUrl = entry.ImageUrl,
+							DisplayUrl = Path.Combine(_hostEnvironment.WebRootPath, "FaultImages", entry.ImageUrl),
+						}).OrderBy(d => d.Line).ToList();
+			return data;
+		}
+
+		public bool RemoveeNTRY(Guid Id)
         {
 			var entry = _context.MobileRNDFaultsEntry.Where(x=> x.Id == Id).FirstOrDefault();
 			_context.MobileRNDFaultsEntry.Remove(entry);
@@ -736,9 +795,9 @@ namespace WebAppEs.Services
 			return data;
 		}
 
-		public List<MRNDHQC_TopFaultAnalysisVM> AllTopFaultModelWise(DateTime? sortdate, Guid ModelID, string AnalysisType)
+		public List<MRNDHQC_TopFaultAnalysisVM> AllTopFaultModelWise(DateTime? sortdate, Guid ModelID, string AnalysisType, string LineNo)
 		{
-			var items = (from faults in _context.MRNDHQC_TopFaultHead.Where(x => x.Date == sortdate && x.PartsModelID == ModelID && x.AnalysisType == AnalysisType)
+			var items = (from faults in _context.MRNDHQC_TopFaultHead.Where(x => x.Date == sortdate && x.PartsModelID == ModelID && x.AnalysisType == AnalysisType && x.LineNo == LineNo)
 						 join dt in _context.MRNDHQC_TopFaultAnalysis
 							on new { X1 = faults.Id } equals new { X1 = dt.HeadID }
 							into dtrmp
@@ -767,6 +826,7 @@ namespace WebAppEs.Services
 							 SubCategory = subcategory.SubCategoryName,
 							 SubCategoryID = details.SubCategoryID,
 							 ImageUrl = details.ImageUrl,
+							 DisplayUrl = Path.Combine(_hostEnvironment.WebRootPath, "FaultImages", details.ImageUrl),
 							 Quantity = 0,
 							 Reason = details.Reason,
 							 Sample = details.Sample,
@@ -813,6 +873,7 @@ namespace WebAppEs.Services
 							 PartsModelID = faults.PartsModelID,
 							 StatusIsToday = faults.Date == DateTime.Today ? true : false,
 							 AnalysisType = faults.AnalysisType,
+							 ModelWithLine = rm.ModelName + " / Line " + faults.LineNo
 							 //Disabled = "disabled"
 						 }).ToList();
 			return items;
@@ -841,6 +902,7 @@ namespace WebAppEs.Services
 							 Model = rm.ModelName,
 							 PartsModelID = faults.PartsModelID,
 							 AnalysisType = faults.AnalysisType,
+							 LineNo = faults.LineNo,
 						 }).FirstOrDefault();
 			return items;
 		}
@@ -891,6 +953,7 @@ namespace WebAppEs.Services
 							 SubCategory = subcategory.SubCategoryName,
 							 SubCategoryID = details.SubCategoryID,
 							 ImageUrl = details.ImageUrl,
+							 DisplayUrl = "/FaultImages/"+ details.ImageUrl,
 							 Quantity = 0,
 							 Reason = details.Reason,
 							 Sample = details.Sample,

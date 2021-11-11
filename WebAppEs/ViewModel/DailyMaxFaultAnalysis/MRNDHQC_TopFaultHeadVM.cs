@@ -19,7 +19,9 @@ namespace WebAppEs.ViewModel.DailyMaxFaultAnalysis
         public DateTime? Date { get; set; }
         public string DateString { get; set; }
         public Guid PartsModelID { get; set; }
+        public string LineNo { get; set; }
         public string Model { get; set; }
+        public string ModelWithLine { get; set; }
         public bool StatusIsToday { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }

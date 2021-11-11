@@ -37,7 +37,7 @@ namespace WebAppEs.Controllers
 			string iDate = "2021-10-17 00:00:00.0000000";
 			DateTime oDate = Convert.ToDateTime(iDate);
 
-			var chartdata = _dataAccessService.GetSingelDayData(oDate);
+			var chartdata = _dataAccessService.GetSingelDayData(DateTime.Today);
 
 			DashboasrViewModel dashboard = new DashboasrViewModel();
 			
@@ -74,14 +74,13 @@ namespace WebAppEs.Controllers
 		{
 			DashboasrViewModel dashboard = new DashboasrViewModel();
 			var chartdata = _dataAccessService.GetSingelDayData(Date);
-			//if (chartdata.Lavel != null)
-			//{
-			//	dashboard.Lavel = chartdata.Lavel;
-			//	dashboard.FunctionalFaultsPercentageViewModel = chartdata.FunctionalFaultsPercentageViewModel;
-			//	dashboard.AestheticFaultsPercentageViewModel = chartdata.AestheticFaultsPercentageViewModel;
-			//}
+            if (chartdata.Lavel != null)
+            {
+                dashboard.Lavel = chartdata.Lavel;
+                dashboard.FaultPercentageForChartWithFunAes = chartdata.FaultPercentageForChartWithFunAes;
+            }
 
-			return Json(dashboard);
+            return Json(dashboard);
 		}
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAppEs.Models;
 using WebAppEs.Services;
+using WebAppEs.ViewModel.DailyMaxFaultAnalysis;
 using WebAppEs.ViewModel.FaultsEntry;
 using WebAppEs.ViewModel.Report;
 
@@ -24,15 +27,15 @@ namespace WebAppEs.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IDataAccessService _dataAccessService;
         private readonly ILogger<AdminController> _logger;
-
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ReportController(IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IDataAccessService dataAccessService, ILogger<AdminController> logger)
+        public ReportController(IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IDataAccessService dataAccessService, ILogger<AdminController> logger, IWebHostEnvironment hostingEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
             _roleManager = roleManager;
             _dataAccessService = dataAccessService;
             _logger = logger;
+            _webHostEnvironment = hostingEnvironment;
         }
         [Authorize("Authorization")]
         public IActionResult Index()
@@ -404,155 +407,18 @@ namespace WebAppEs.Controllers
             {
                 //String[] format = { "dd-MM-yy" };
                 var DateString = String.Format("{0:M-d-yyyy}", viewmodel.Date);
-                
-                var fileName = "Faults_Details (" + DateString + ")";
-                var fileName2 = "Faults_Details (" + DateString  + ").xlsx";
+                //var fileName = "Faults_Details (" + DateString + ")";
+                var fileName2 = "Daily_Analysis (" + DateString  + ").xlsx";
 
-                var result = _dataAccessService.DetailsReportList(viewmodel.Date);
+                var InLine = _dataAccessService.Inline(viewmodel.Date);
+                var Aging = _dataAccessService.Aging(viewmodel.Date);
+                var OQC = _dataAccessService.OQC(viewmodel.Date);
 
-                var worksheet = workbook.Worksheets.Add(fileName);
+                var worksheet = worksheetMethod(workbook.Worksheets.Add("In Line"), InLine, DateString, "In Line Production");
 
-                worksheet.Column(1).Width = 20;
-                worksheet.Column(2).Width = 25;
-                worksheet.Column(3).Width = 10;
-                worksheet.Column(4).Width = 40;
-                worksheet.Column(5).Width = 40;
-                worksheet.Column(6).Width = 40;
+                var worksheet2 = worksheetMethod(workbook.Worksheets.Add("Aging"), Aging, DateString, "Aging");
 
-                worksheet.Column(1).Style.Alignment.WrapText = true;
-                worksheet.Column(2).Style.Alignment.WrapText = true;
-                worksheet.Column(3).Style.Alignment.WrapText = true;
-                worksheet.Column(4).Style.Alignment.WrapText = true;
-                worksheet.Column(5).Style.Alignment.WrapText = true;
-                worksheet.Column(6).Style.Alignment.WrapText = true;
-
-                // Background
-
-                //worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(1, 7)).Merge();
-
-
-                // Set some values with different font sizes
-                var currentRow = 1;
-                worksheet.Cell(currentRow, 1).Value = "Process Development";
-                var range = worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 6));
-                range.Merge().Style.Font.SetBold().Font.FontSize = 14;
-                worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-
-                currentRow = 2;
-                
-                worksheet.Cell(currentRow, 1).Value = "Faults Details (" + DateString + ")";
-                var range2 = worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 6));
-                range2.Merge().Style.Font.SetBold().Font.FontSize = 14;
-                worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                range2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-
-                currentRow = 4;
-                worksheet.Cell(currentRow, 1).Value = "Assembly  Line";
-                worksheet.Cell(currentRow, 1).Style.Font.FontSize = 12;
-                worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                worksheet.Cell(currentRow, 1).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                worksheet.Cell(currentRow, 1).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                worksheet.Cell(currentRow, 2).Value = "Fault Type";
-                worksheet.Cell(currentRow, 2).Style.Font.FontSize = 12;
-                worksheet.Cell(currentRow, 2).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 2).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                worksheet.Cell(currentRow, 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                worksheet.Cell(currentRow, 2).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-
-                //worksheet.Cell(currentRow, 3).Value = "Image of Fault";
-                //worksheet.Cell(currentRow, 3).Style.Font.FontSize = 11;
-                //worksheet.Cell(currentRow, 3).Style.Font.Bold = true;
-                //worksheet.Cell(currentRow, 3).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                //worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-
-                worksheet.Cell(currentRow, 3).Value = "Fault Quantity";
-                worksheet.Cell(currentRow, 3).Style.Font.FontSize = 12;
-                worksheet.Cell(currentRow, 3).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 3).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                worksheet.Cell(currentRow, 3).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-
-                worksheet.Cell(currentRow, 4).Value = "Root Cause";
-                worksheet.Cell(currentRow, 4).Style.Font.FontSize = 12;
-                worksheet.Cell(currentRow, 4).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 4).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                worksheet.Cell(currentRow, 4).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                worksheet.Cell(currentRow, 5).Value = "Solution";
-                worksheet.Cell(currentRow, 5).Style.Font.FontSize = 12;
-                worksheet.Cell(currentRow, 5).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 5).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                worksheet.Cell(currentRow, 5).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                worksheet.Cell(currentRow, 5).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                worksheet.Cell(currentRow, 6).Value = "Remarks";
-                worksheet.Cell(currentRow, 6).Style.Font.FontSize = 12;
-                worksheet.Cell(currentRow, 6).Style.Font.Bold = true;
-                worksheet.Cell(currentRow, 6).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                worksheet.Cell(currentRow, 6).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                worksheet.Cell(currentRow, 6).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                foreach (var group in result.GroupBy(item => item.LineWithModel))
-                {
-                    
-                    currentRow++;
-                    var curr = currentRow;
-                    worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 6)).Merge();
-
-                    worksheet.Cell(currentRow, 1).Value = group.Key;
-                    worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                    worksheet.Cell(currentRow, 1).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    worksheet.Cell(currentRow, 1).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    var ranges = worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow, 6));
-                    ranges.Merge().Style.Font.SetBold().Font.FontSize = 11;
-                    ranges.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                    ranges.Style.Fill.SetBackgroundColor(XLColor.Gainsboro);
-
-                    foreach (var group1 in group)
-                    {
-                        currentRow++;
-                        worksheet.Cell(currentRow, 2).Value = group1.FaultType;
-                        worksheet.Cell(currentRow, 2).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        worksheet.Cell(currentRow, 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                        worksheet.Cell(currentRow, 2).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                        //worksheet.Cell(currentRow, 3).Value = item.FaultQty;
-                        //worksheet.Cell(currentRow, 3).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        //worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-
-                        worksheet.Cell(currentRow, 3).Value = group1.FaultQty;
-                        worksheet.Cell(currentRow, 3).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                        worksheet.Cell(currentRow, 3).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                        worksheet.Cell(currentRow, 4).Value = group1.RootCause;
-                        worksheet.Cell(currentRow, 4).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                        worksheet.Cell(currentRow, 4).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                        worksheet.Cell(currentRow, 5).Value = group1.Solution;
-                        worksheet.Cell(currentRow, 5).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        worksheet.Cell(currentRow, 5).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                        worksheet.Cell(currentRow, 5).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-
-                        worksheet.Cell(currentRow, 6).Value = group1.Remarks;
-                        worksheet.Cell(currentRow, 6).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
-                        worksheet.Cell(currentRow, 6).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                        worksheet.Cell(currentRow, 6).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    }
-                    var ranges2 = worksheet.Range(worksheet.Cell(curr, 1), worksheet.Cell(currentRow, 1));
-                    ranges2.Merge().Style.Font.SetBold().Font.FontSize = 11;
-                    ranges2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
-                }
-
-                
+                var worksheet3 = worksheetMethod(workbook.Worksheets.Add("OQC"), OQC, DateString, "OQC");
 
                 using (var stream = new MemoryStream())
                 {
@@ -565,6 +431,242 @@ namespace WebAppEs.Controllers
                         fileName2);
                 }
             }
+        }
+        public IXLWorksheet worksheetMethod(IXLWorksheet worksheet, List<MRNDHQC_TopFaultAnalysisVM> result, string DateString, string title)
+        {
+            worksheet.Column(1).Width = 15;
+            worksheet.Column(2).Width = 15;
+            worksheet.Column(3).Width = 23;
+            worksheet.Column(4).Width = 25;
+            worksheet.Column(5).Width = 40;
+            worksheet.Column(6).Width = 40;
+            worksheet.Column(7).Width = 15;
+            worksheet.Column(8).Width = 40;
+            worksheet.Column(9).Width = 60;
+
+            worksheet.Column(1).Style.Alignment.WrapText = true;
+            worksheet.Column(2).Style.Alignment.WrapText = true;
+            worksheet.Column(3).Style.Alignment.WrapText = true;
+
+
+            worksheet.Column(4).Style.Alignment.WrapText = true;
+            worksheet.Column(5).Style.Alignment.WrapText = true;
+            worksheet.Column(6).Style.Alignment.WrapText = true;
+            worksheet.Column(7).Style.Alignment.WrapText = true;
+            worksheet.Column(8).Style.Alignment.WrapText = true;
+            worksheet.Column(9).Style.Alignment.WrapText = true;
+
+            worksheet.Rows().AdjustToContents();
+            // Background
+
+            //worksheet.Range(worksheet.Cell(1, 1), worksheet.Cell(1, 7)).Merge();
+
+
+            // Set some values with different font sizes
+            var currentRow = 1;
+            var path2 = Path.Combine(_webHostEnvironment.WebRootPath, "Logo", "LogoPNG.png");
+            worksheet.Cell(currentRow, 1).Value = "Cellular Phone Qc  Department";
+            var image2 = worksheet.AddPicture(path2).MoveTo(worksheet.Cell(currentRow, 1), new Point(10, 6));
+            image2.Height = 40;
+            image2.Width = 100;
+            var range = worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 9));
+            range.Merge().Style.Font.SetBold().Font.FontSize = 14;
+            worksheet.Cell(currentRow, 1).Style.Font.FontName = "Rockwell Condensed";
+            worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            range.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+            currentRow = 2;
+
+            worksheet.Cell(currentRow, 1).Value = "Date: " + DateString;
+            var range2 = worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 9));
+            range2.Merge().Style.Font.SetBold().Font.FontSize = 14;
+            worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            range2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+            currentRow = 3;
+            worksheet.Cell(currentRow, 1).Value = "Daily Maximum Fault Analysis Report ("+title+")";
+            var range7 = worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 9));
+            range7.Merge().Style.Font.SetBold().Font.FontSize = 14;
+            worksheet.Cell(currentRow, 1).Style.Font.FontName = "Rockwell Condensed";
+            worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 1).Style.Font.FontColor = XLColor.SteelBlue;
+            worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            range7.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+            currentRow = 5;
+            worksheet.Cell(currentRow, 1).Value = "Model";
+            worksheet.Cell(currentRow, 1).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 1).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 1).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 1).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            worksheet.Cell(currentRow, 2).Value = "Line";
+            worksheet.Cell(currentRow, 2).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 2).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 2).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 2).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+
+            //worksheet.Cell(currentRow, 3).Value = "Image of Fault";
+            //worksheet.Cell(currentRow, 3).Style.Font.FontSize = 11;
+            //worksheet.Cell(currentRow, 3).Style.Font.Bold = true;
+            //worksheet.Cell(currentRow, 3).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            //worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+            worksheet.Cell(currentRow, 3).Value = "Top Faulty Item";
+            worksheet.Cell(currentRow, 3).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 3).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 3).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 3).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+
+            worksheet.Cell(currentRow, 4).Value = "Image";
+            worksheet.Cell(currentRow, 4).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 4).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 4).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 4).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            worksheet.Cell(currentRow, 5).Value = "Fault";
+            worksheet.Cell(currentRow, 5).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 5).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 5).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 5).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 5).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            worksheet.Cell(currentRow, 6).Value = "Reason";
+            worksheet.Cell(currentRow, 6).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 6).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 6).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 6).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 6).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            worksheet.Cell(currentRow, 7).Value = "Sample";
+            worksheet.Cell(currentRow, 7).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 7).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 7).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 7).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 7).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            worksheet.Cell(currentRow, 8).Value = "Remarks";
+            worksheet.Cell(currentRow, 8).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 8).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 8).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 8).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 8).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            worksheet.Cell(currentRow, 9).Value = "Probable Solution And Recommendation";
+            worksheet.Cell(currentRow, 9).Style.Font.FontSize = 12;
+            worksheet.Cell(currentRow, 9).Style.Font.Bold = true;
+            worksheet.Cell(currentRow, 9).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+            worksheet.Cell(currentRow, 9).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            worksheet.Cell(currentRow, 9).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            foreach (var group in result.GroupBy(item => new { item.Model, item.Line }))
+            {
+                currentRow++;
+                var curr = currentRow;
+                //worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 9)).Merge();
+
+                worksheet.Cell(currentRow, 1).Value = group.Key.Model;
+                worksheet.Cell(currentRow, 1).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell(currentRow, 1).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                worksheet.Cell(currentRow, 1).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                //var ranges = worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 9));
+                //ranges.Merge().Style.Font.SetBold().Font.FontSize = 11;
+                //ranges.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                //ranges.Style.Fill.SetBackgroundColor(XLColor.White);
+
+                //worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow, 9)).Merge();
+
+                worksheet.Cell(currentRow, 2).Value = "Line " + group.Key.Line;
+                worksheet.Cell(currentRow, 2).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheet.Cell(currentRow, 2).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                worksheet.Cell(currentRow, 2).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                //var ranges22 = worksheet.Range(worksheet.Cell(currentRow, 3), worksheet.Cell(currentRow, 8));
+                //ranges22.Merge().Style.Font.SetBold().Font.FontSize = 11;
+                //ranges22.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                //ranges22.Style.Fill.SetBackgroundColor(XLColor.DarkGray);
+
+                foreach (var group1 in group)
+                {
+                    worksheet.Cell(currentRow, 3).Value = group1.Category;
+                    worksheet.Cell(currentRow, 3).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell(currentRow, 3).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Cell(currentRow, 3).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                    if (group1.ImageUrl == null)
+                    {
+                        worksheet.Cell(currentRow, 4).Value = "Picture wasn't detected";
+                        worksheet.Cell(currentRow, 4).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                        worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                        worksheet.Cell(currentRow, 4).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    }
+                    else
+                    {
+                        //var path2 = _webHostEnvironment.WebRootPath + $@"{ group1.ImageUrl}";
+                        var path = Path.Combine(_webHostEnvironment.WebRootPath, "FaultImages", group1.ImageUrl);
+                        if (System.IO.File.Exists(path))
+                        {
+                            //int iColumnWidth = (int)((worksheet.Column(4).Width - 1) * 7 + 12); // To convert column width in pixel unit.
+                            var image = worksheet.AddPicture(path).MoveTo(worksheet.Cell(currentRow, 4), new Point(6, 6));
+                            image.Height = 40;
+                            image.Width = 165;
+                            worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                            worksheet.Row(currentRow).Height = 40;
+                        }
+                        else
+                        {
+                            worksheet.Cell(currentRow, 4).Value = "Picture wasn't detected";
+                            worksheet.Cell(currentRow, 4).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                            worksheet.Cell(currentRow, 4).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                            worksheet.Cell(currentRow, 4).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                        }
+                    }
+
+                    worksheet.Cell(currentRow, 5).Value = group1.SubCategory;
+                    worksheet.Cell(currentRow, 5).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell(currentRow, 5).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Cell(currentRow, 5).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                    worksheet.Cell(currentRow, 6).Value = group1.Reason;
+                    worksheet.Cell(currentRow, 6).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell(currentRow, 6).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Cell(currentRow, 6).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                    worksheet.Cell(currentRow, 7).Value = group1.Sample;
+                    worksheet.Cell(currentRow, 7).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell(currentRow, 7).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Cell(currentRow, 7).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                    worksheet.Cell(currentRow, 8).Value = group1.Remarks;
+                    worksheet.Cell(currentRow, 8).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell(currentRow, 8).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Cell(currentRow, 8).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                    worksheet.Cell(currentRow, 9).Value = group1.ProblemSolAndRec;
+                    worksheet.Cell(currentRow, 9).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                    worksheet.Cell(currentRow, 9).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    worksheet.Cell(currentRow, 9).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                    currentRow++;
+                }
+                currentRow -= 1;
+                var ranges2 = worksheet.Range(worksheet.Cell(curr, 1), worksheet.Cell(currentRow, 1));
+                ranges2.Merge().Style.Font.SetBold().Font.FontSize = 11;
+                ranges2.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+
+                var ranges5 = worksheet.Range(worksheet.Cell(curr, 2), worksheet.Cell(currentRow, 2));
+                ranges5.Merge().Style.Font.SetBold().Font.FontSize = 11;
+                ranges5.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            }
+
+            return worksheet;
         }
     }
 }
